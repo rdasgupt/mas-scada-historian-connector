@@ -1,0 +1,12 @@
+
+dist: xenial
+language: java
+jdk:
+  - openjdk11
+
+script:
+  - mkdir tmp
+  - mvn clean package
+  #  - ./bin/package.sh
+  #  - cd $TRAVIS_BUILD_DIR/buildimg && tar -czf $TRAVIS_BUILD_DIR/mas-scada-historian-connector.tgz ./bin/ ./lib/
+
