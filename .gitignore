@@ -1,0 +1,17 @@
+.gradle
+build
+target/
+tmp
+buildimg
+venv
+
+# docs directory - do not upload untill copyright issue is resolved
+docs
+
+# Visual Studio Code
+.settings/
+.classpath
+.factorypath
+.project
+.vscode/
+

@@ -1,0 +1,35 @@
+{
+    "id": "DevTest",
+    "iotp": {
+        "url": "https://xxxxxx.internetofthings.ibmcloud.com/api/v0002",
+        "orgId": "xxxxxx",
+        "host": "xxxxxx.messaging.internetofthings.ibmcloud.com",
+        "port": 8883,
+        "asHost": "api-xxxx.connectedproducts.internetofthings.ibmcloud.com",
+        "apiKey": "a-xxxxxx-tavok0xsxt",
+        "apiToken": "cNyH_MNJ37A-p2ppVl",
+        "tenantId": "xxxx",
+        "schemaName": "BLUADMIN"
+    },
+    "historian": {
+        "dbType": "pisql",
+        "jdbcUrl": "jdbc:pisql://10.208.72.125/Data Source=pidemo; Integrated Security=SSPI;",
+        "schema": "piarchive",
+        "database": "picomp2",
+        "user": "Administrator",
+        "password": "xxxxxxxx",
+        "serverTimezone": "American/Chicago",
+        "startDate": "2021-12-01 08:00:00",
+        "fetchInterval": 900,
+        "fetchIntervalHistorical": 3600
+    },
+    "jdbc": {
+        "dbType": "db2",
+        "jdbcUrl": "jdbc:db2://db2w-bklaiok.us-south.db2w.cloud.ibm.com:50001/BLUDB:sslConnection=true;",
+        "schema": "BLUADMIN",
+        "database": "BLUDB",
+        "user": "bluadmin",
+        "password": "g2XowurIc27fH43cG5Qi_BNabVf3@"
+    } 
+}
+
