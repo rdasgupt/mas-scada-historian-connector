@@ -1,0 +1,44 @@
+{
+    "serviceName": "Service1",
+    "serviceType": "osipi",
+    "description": "Sample Tag Mapping file",
+    "csvFileName": "testData.csv",
+    "deviceTypes": [
+        {
+            "type": "GenericAssetType",
+            "tagpathFilters": [
+                "Assets\\\\.*"
+            ],
+            "discardFilters": [
+                ".*TypicalValue"
+            ]
+        },
+        {
+            "type": "DistillType",
+            "tagpathFilters": [
+                "DistillExample\\\\.*"
+            ]
+        },
+        {
+            "type": "OilWellType",
+            "tagpathFilters": [
+                "West Texas\\\\.*"
+            ],
+            "discardFilters": [
+                ".*TypicalValue"
+            ]
+        }
+    ],
+    "metrics": {
+        "name": "${Name}",
+        "value": "",
+        "type": "${AttributeType}",
+        "decimalAccuracy": "${AttributeDisplayDigits}",
+        "label": "${Description}"
+    },
+    "dimension": {
+       "tagpath": "${Parent},${Name}",
+       "site": "IBMAustin"
+    } 
+}
+
