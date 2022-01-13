@@ -1,6 +1,5 @@
 # IBM MAS Data Ingest Connector for SCADA Historian
 
-[![Build Status](https://travis-ci.com/ibm-watson-iot/mas-scada-historian-connector.svg?branch=master)](https://travis-ci.com/ibm-watson-iot/mas-scada-historian-connector)
 [![GitHub issues](https://img.shields.io/github/issues/ibm-watson-iot/mas-scada-historian-connector.svg)](https://github.com/ibm-watson-iot/mas-scada-historian-connector/issues)
 [![GitHub](https://img.shields.io/github/license/ibm-watson-iot/mas-scada-historian-connector.svg)](https://github.com/ibm-watson-iot/mas-scada-historian-connector/blob/master/LICENSE)
 
