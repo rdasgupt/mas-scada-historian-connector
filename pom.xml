@@ -59,21 +59,9 @@
     </dependency>
 
     <dependency>
-        <groupId>com.microsoft.sqlserver</groupId>
-        <artifactId>mssql-jdbc</artifactId>
-        <version>8.2.1.jre11</version>
-    </dependency>
-
-    <dependency>
         <groupId>com.ibm.db2</groupId>
         <artifactId>jcc</artifactId>
         <version>11.5.0.0</version>
-    </dependency>
-
-    <dependency>
-        <groupId>mysql</groupId>
-        <artifactId>mysql-connector-java</artifactId>
-        <version>8.0.20</version>
     </dependency>
 
     <dependency>

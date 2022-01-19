@@ -1,0 +1,33 @@
+# mkdocs build -d ../docs
+
+site_name: IBM Maximo Application Suite - SCADA Historian Connector
+nav:
+  - Home: 'index.md'
+  - Overview: 'overview.md'
+  - Installation: 'installation.md'
+  - Configuration: 'configuration.md'
+  - Connection Configuration: 'connection.md'
+  - Mapping Rules Configuration: 'mapping.md'
+
+theme: readthedocs
+
+markdown_extensions:
+  - toc:
+      permalink: 
+  - admonition
+  # Add this to support expandable sections
+  #- pymdownx.details
+
+# https://squidfunk.github.io/mkdocs-material/extensions/admonition/
+# Note
+# Abstract
+# Info
+# Tip
+# Success
+# Question
+# Warning
+# Failure
+# Danger
+# Bug
+# Example
+# Quote

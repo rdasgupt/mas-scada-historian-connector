@@ -196,7 +196,8 @@ public class DataProvider {
                     Properties plist = new Properties();
                     plist.put("user", dbUser);
                     plist.put("password", dbPass);  
-                    Class.forName(driver).newInstance();    
+                    // Class.forName(driver).newInstance();    
+                    Class.forName(driver).getDeclaredConstructor().newInstance();    
                     conn = DriverManager.getConnection(sourceJDBCUrl,plist);
                 } else if ( type == Constants.DB_SOURCE_TYPE_MYSQL ) {
                     conn = DriverManager.getConnection(sourceJDBCUrl, dbUser, dbPass);

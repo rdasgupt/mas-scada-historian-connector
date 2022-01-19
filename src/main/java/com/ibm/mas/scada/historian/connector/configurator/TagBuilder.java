@@ -113,6 +113,8 @@ public class TagBuilder {
                 CSVFormat format = CSVFormat.Builder.create(CSVFormat.DEFAULT)
                     .setHeader()
                     .setSkipHeaderRecord(true)
+                    .setAllowMissingColumnNames(true)
+                    .setIgnoreEmptyLines(true)
                     .build();
 
                 CSVParser csvParser = new CSVParser(reader, format);
