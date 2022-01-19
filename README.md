@@ -22,5 +22,31 @@ This project includes source to build the connector application that:
 * org.json
 * JDBC driver for MSSQL, MySQL and IBM DB2
 
-*** Still under construction ***
+
+## Build 
+
+Clone the GitHub project
+```
+$ git clone https://github.ibm.com/Ranjan-Dasgupta/messagesight-installer
+```
+
+Build and package using gradle
+```
+$ cd mas-scada-historian-connector
+$ gradle build
+$ ./bin/package.sh
+```
+
+Build and package using maven
+```
+$ cd mas-scada-historian-connector
+$ mvn package -DskipTests
+$ ./bin/package.sh
+```
+
+
+## Documentation
+Refer to the connector documentation for installation and configuration details:
+
+https://ibm-watson-iot.github.io/mas-scada-historian-connector/
 
