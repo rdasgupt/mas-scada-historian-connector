@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Mapping Rules Configuration - IBM Maximo Application Suite - SCADA Historian Connector</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Mapping Rules Configuration";
+    var mkdocs_page_input_path = "mapping.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> IBM Maximo Application Suite - SCADA Historian Connector</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../overview/">Overview</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../configuration/">Configuration</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../connection/">Connection Configuration</a>
+                    </li>
+                </ul>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Mapping Rules Configuration</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#configuration-object">Configuration Object</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#sample-csv-file-pidemocsv-used-to-define-mappingjson-configuration-file">Sample CSV file (pidemo.csv) used to define mapping.json configuration file</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#sample-mappingjson-configuration-file-for">Sample mapping.json Configuration File for</a>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">IBM Maximo Application Suite - SCADA Historian Connector</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Mapping Rules Configuration</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="mapping-rules-configuration">Mapping Rules Configuration<a class="headerlink" href="#mapping-rules-configuration" title="Permanent link"></a></h1>
+<p>In MAS Data Lake, the device data for different device types are stored in their own table. 
+The tables are named as <code>IOT_&lt;deviceType&gt;</code>. The configuration items that controls the transformation of
+extracted data from SCADA historian for a specific device type, are defined in mapping configuration file.<br />
+The location of this configuration file is <code>&lt;InstallRoot&gt;/volume/config/mapping.json</code>.</p>
+<h2 id="configuration-object">Configuration Object<a class="headerlink" href="#configuration-object" title="Permanent link"></a></h2>
+<p>Provide data configuration object in a json formated file:</p>
+<pre><code>{
+    &quot;serviceName&quot;: &quot;String&quot;,
+    &quot;serviceType&quot;: &quot;String&quot;,
+    &quot;description&quot;: &quot;String&quot;,
+    &quot;csvFileName&quot;: &quot;String&quot;,
+    &quot;deviceTypes&quot;: [
+        {
+            &quot;type&quot;: &quot;String&quot;,
+            &quot;tagpathFilters&quot;: [
+                &quot;String&quot;
+            ]
+        }
+    ],
+    &quot;metrics&quot;: {
+        &quot;name&quot;: &quot;String&quot;,
+        &quot;value&quot;: &quot;String&quot;,
+        &quot;unit&quot;: &quot;String&quot;,
+        &quot;type&quot;: &quot;String&quot;,
+        &quot;decimalAccuracy&quot;: &quot;String&quot;,
+        &quot;label&quot;: &quot;String&quot;
+    },
+    &quot;dimensions&quot;: {
+       &quot;tagpath&quot;: &quot;String&quot;,
+       &quot;tagid&quot;: &quot;String&quot;,
+       &quot;site&quot;: &quot;String&quot;,
+       &quot;categories&quot;: &quot;String&quot;
+    }
+}
+</code></pre>
+
+<p>Where:</p>
+<ul>
+<li><code>serviceName</code>: Defines the name of the service for example PITest1</li>
+<li><code>csvFileName</code>: Name of the CSV file.</li>
+<li><code>deviceTypes</code>: Specifies device type and corresponding tagpath patterns.<ul>
+<li><code>type</code>: Specifies device type id.</li>
+<li><code>tagpathFilters</code>: Specifies list of tagpath patterns.</li>
+</ul>
+</li>
+<li><code>metrics</code>: This object defines the mapping rule for device metrics data items.<ul>
+<li><code>name</code>: Column name in CSV file used to map metric "Name" </li>
+<li><code>value</code>: Metric value is extracted from PI Archive database at runtime. Set this to an empty string in this configuration object.</li>
+<li><code>unit</code>: Column name in CSV file used to map metric "Unit"</li>
+<li><code>type</code>: Column name in CSV file used to map metric "Type"</li>
+<li><code>label</code>: Column name in CSV file used to map metric "Label"</li>
+<li><code>decimalAccuracy</code>: Column name in CSV file used to map metric "Decimal Accuracy"</li>
+</ul>
+</li>
+<li><code>dimensions</code>: This object defines the mapping rule for device dimension data.
+    <strong> Required items: </strong><ul>
+<li><code>tagpath</code>: One or more column name(s) in the CSV file used to create "tag path"</li>
+<li><code>tagid</code>: Column name in the CSV file used to map "tag id"
+<strong> Add more dimension data mapping </strong></li>
+<li><code>site</code>: Column name in the CSV file used to map "site name".</li>
+</ul>
+</li>
+</ul>
+<h2 id="sample-csv-file-pidemocsv-used-to-define-mappingjson-configuration-file">Sample CSV file (pidemo.csv) used to define mapping.json configuration file<a class="headerlink" href="#sample-csv-file-pidemocsv-used-to-define-mappingjson-configuration-file" title="Permanent link"></a></h2>
+<pre><code>Parent,Name,ObjectType,Error,UniqueID,ParentUniqueID,Description,Categories,AttributeDefaultUOM,AttributeType,AttributeValue,AttributeDataReference,AttributeDisplayDigits
+DistillExample\4820Column,Accumulator Level,Attribute,,5ef1040f-b6af-59f7-352c-0442281fb1f9,9f8a3f5d-2d1b-11ec-98b3-06abac9454c4,Liquid level in reflux accumulator,Process Parameters;,%,Double,,PI Point,-5,,,
+...
+</code></pre>
+
+<h2 id="sample-mappingjson-configuration-file-for">Sample <code>mapping.json</code> Configuration File for<a class="headerlink" href="#sample-mappingjson-configuration-file-for" title="Permanent link"></a></h2>
+<pre><code>{
+    &quot;serviceName&quot;: &quot;Service1&quot;,
+    &quot;csvFileName&quot;: &quot;pidemo.csv&quot;,
+    &quot;deviceTypes&quot;: [
+        {
+            &quot;type&quot;: &quot;PIDemoType&quot;,
+            &quot;tagpathFilters&quot;: [
+                &quot;DistillExample.*&quot;
+            ]
+        }
+    ],
+    &quot;metrics&quot;: {
+        &quot;name&quot;: &quot;${Name}&quot;,
+        &quot;value&quot;: &quot;&quot;,
+        &quot;unit&quot;: &quot;${AttributeDefaultUOM}&quot;,
+        &quot;type&quot;: &quot;${AttributeType}&quot;,
+        &quot;decimalAccuracy&quot;: &quot;${AttributeDisplayDigits}&quot;,
+        &quot;label&quot;: &quot;${Description}&quot;
+    },
+    &quot;dimensions&quot;: {
+       &quot;tagpath&quot;: &quot;${Parent},${Name}&quot;,
+       &quot;tagid&quot;: &quot;${UniqueID}&quot;,
+       &quot;site&quot;: &quot;IBMAustin&quot;,
+       &quot;categories&quot;: &quot;${Categories}&quot;
+    }
+}
+</code></pre>
+
+<p>NOTES:</p>
+<ul>
+<li>To map a column name specify the column name within curly brackets <code>{}</code>, For example "unit": "${AttributeDefaultUOM}. Column names are case sensitive. The "unit" in pidemo.csv example will map to "lb/h".</li>
+<li>You can use comma-separated list of column name(s) to map a metric or dimension data. For example "${Parent},${Name}"  mapping rule is used to specify tagpath. The tagpath in this example will map to "DistillExample\4820Column\Bottoms Flow". A back-slash <code>\</code> will be used as a field-separator.</li>
+<li>DO not use curly brackets <code>{}</code> to specify a fixed value. For example "site": "IBMAustin".</li>
+</ul>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../connection/" class="btn btn-neutral" title="Connection Configuration"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../connection/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

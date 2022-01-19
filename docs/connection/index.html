@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Connection Configuration - IBM Maximo Application Suite - SCADA Historian Connector</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Connection Configuration";
+    var mkdocs_page_input_path = "connection.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> IBM Maximo Application Suite - SCADA Historian Connector</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../overview/">Overview</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../configuration/">Configuration</a>
+                    </li>
+                </ul>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Connection Configuration</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#configuration-object">Configuration Object</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#sample-connectionjson-configuration-file">Sample connection.json Configuration File</a>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../mapping/">Mapping Rules Configuration</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">IBM Maximo Application Suite - SCADA Historian Connector</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Connection Configuration</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="connection-configuration">Connection Configuration<a class="headerlink" href="#connection-configuration" title="Permanent link"></a></h1>
+<p>The <code>connection.json</code> is a JSON file that allows you to define the connection related 
+configuration item to connect to SCADA historian database and MAS. The location of this 
+file is <code>&lt;InstallRoot&gt;/ibm/masshc/volume/config/connection.json</code>. </p>
+<h2 id="configuration-object">Configuration Object<a class="headerlink" href="#configuration-object" title="Permanent link"></a></h2>
+<p>Provide connection configuration object in a json formated file:</p>
+<pre><code>{
+    &quot;id&quot;: &quot;String&quot;,
+    &quot;historian&quot;: {
+        &quot;jdbcUrl&quot;: &quot;String&quot;,
+        &quot;user&quot;: &quot;String&quot;,
+        &quot;password&quot;: &quot;String&quot;,
+        &quot;serverTimezone&quot;: &quot;String&quot;,
+        &quot;startDate&quot;: &quot;String&quot;,
+        &quot;dbType&quot;: &quot;String&quot;,
+        &quot;schema&quot;: &quot;String&quot;,
+        &quot;database&quot;: &quot;String&quot;,
+        &quot;extractInterval&quot;: integer
+    },
+    &quot;iotp&quot;: {
+        &quot;url&quot;: &quot;String&quot;,
+        &quot;orgId&quot;: &quot;String&quot;,
+        &quot;host&quot;: &quot;String&quot;,
+        &quot;port&quot;: integer,
+        &quot;asHost&quot;: &quot;String&quot;,
+        &quot;schemaName&quot;: &quot;String&quot;,
+        &quot;apiKey&quot;: &quot;String&quot;,
+        &quot;apiToken&quot;: &quot;String&quot;,
+        &quot;tenantId&quot;: &quot;String&quot;
+    }
+}
+</code></pre>
+
+<p>Where:</p>
+<ul>
+<li><code>id</code>: Description to identify the connection json file</li>
+<li><code>historian</code>: This configuration object is required. The configuration items specified in this object are used
+to connect to SCADA historian to extract device data and send to MAS Monitor.
+    <strong> Required Items: </strong><ul>
+<li><code>jdbcUrl</code>: JDBC URL to connect to the historian database. Example "jdbc:pisql://10.208.72.125/Data Source=pidemo; Integrated Security=SSPI;"</li>
+<li><code>user</code>: User name to connect to historian.</li>
+<li><code>password</code>: Password to connect to historian.</li>
+<li><code>serverTimezone</code>: Timezone of historian database server. Example "American/Chicago"</li>
+<li><code>startDate</code>: Extract device data from the specified date. Valid format is "YYYY-MM-DD HH:MM:SS"
+<strong> Optional Items: </strong></li>
+<li><code>dbType</code>: Database server configured as SCADA hostorian. The default value is "pisql" (OSIPI historian)</li>
+<li><code>schema</code>: Schema name. The default value is "piarchive"</li>
+<li><code>database</code>: Database name. The default value is "picomp2"</li>
+<li><code>extractInterval</code>: Data from historian is extracted in chunk. The <code>extractInterval</code> specifies the time window in seconds for the chunk. The default value is 60 seconds. The valid range is 30 to 900 seconds.</li>
+</ul>
+</li>
+<li><code>iotp</code>: This configuration object is required. The configuration items are used to configure MAS and send device data to MAS. To configure <code>iotp</code> object, you need credentials from MAS Monitor. You can get these information using MAS Monitor dashboard.
+    <strong> Required Items: </strong><ul>
+<li><code>url</code>: Specifies base URL to invoke APIs to configure MAS</li>
+<li><code>orgId</code>: Specifies a six character organization Id assigned to your IoT Platform service.</li>
+<li><code>host</code>: Specifies host to connect to MAS to send device data</li>
+<li><code>port</code>: Specifies port to connect to MAS </li>
+<li><code>asHost</code>: Specifies host to configure dimensions</li>
+<li><code>schemaName</code>: Specifies the schema to configure dimensions</li>
+<li><code>apiKey</code>: Specifies API Key.</li>
+<li><code>apiToken</code>: Specifies API Token.</li>
+<li><code>tenantid</code>: Specifies tenant id.</li>
+</ul>
+</li>
+</ul>
+<h2 id="sample-connectionjson-configuration-file">Sample <code>connection.json</code> Configuration File<a class="headerlink" href="#sample-connectionjson-configuration-file" title="Permanent link"></a></h2>
+<pre><code>{
+    &quot;id&quot;: &quot;Connection JSON file of ABC Corp.&quot;,
+    &quot;historian&quot;: {
+        &quot;jdbcUrl&quot;: &quot;jdbc:pisql://10.208.72.125/Data Source=pidemo; Integrated Security=SSPI;&quot;,
+        &quot;user&quot;: &quot;Administrator&quot;,
+        &quot;password&quot;: &quot;xxxxxxxxxx&quot;,
+        &quot;serverTimezone&quot;: &quot;American/Chicago&quot;,
+        &quot;startDate&quot;: &quot;2021-12-05 05:00:00&quot;
+    },
+    &quot;iotp&quot;: {
+        &quot;url&quot;: &quot;https://xxxxxx.internetofthings.ibmcloud.com/api/v0002&quot;,
+        &quot;orgId&quot;: &quot;xxxxxx&quot;,
+        &quot;host&quot;: &quot;xxxxxx.messaging.internetofthings.ibmcloud.com&quot;,
+        &quot;port&quot;: 8883,
+        &quot;asHost&quot;: &quot;api-xxxxx.connectedproducts.internetofthings.ibmcloud.com&quot;,
+        &quot;schemaName&quot;: &quot;BLUADMIN&quot;,
+        &quot;apiKey&quot;: &quot;a-xxxxxx-tavok0xsxt&quot;,
+        &quot;apiToken&quot;: &quot;cNyH_XXXXXX-p2ppVl&quot;,
+        &quot;tenantId&quot;: &quot;xxxxx&quot;
+    }
+}
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../mapping/" class="btn btn-neutral float-right" title="Mapping Rules Configuration">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../configuration/" class="btn btn-neutral" title="Configuration"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../configuration/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../mapping/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

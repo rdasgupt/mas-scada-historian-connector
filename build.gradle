@@ -12,6 +12,11 @@ plugins {
     id 'application'
 }
 
+compileJava {
+    options.compilerArgs << '-Xlint:deprecation'
+    options.compilerArgs << '-Xlint:unchecked'
+}
+
 version = '1.0.0'
 
 repositories {
@@ -27,23 +32,31 @@ task createTmpdir() {
 
 test.dependsOn createTmpdir
 
+configurations {
+    libs
+}
+
 dependencies {
-    implementation 'com.google.guava:guava:28.0-jre'
-    implementation 'org.json:json:20211205'
-    implementation 'org.apache.commons:commons-jcs3-core:3.0'
-    implementation 'org.apache.commons:commons-csv:1.9.0'
-    implementation 'commons-net:commons-net:3.0.1'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
-    implementation 'com.microsoft.sqlserver:mssql-jdbc:8.2.1.jre11'
-    implementation 'com.ibm.db2:jcc:11.5.0.0'
-    implementation 'mysql:mysql-connector-java:8.0.20'
-    implementation 'org.eclipse.paho:org.eclipse.paho.mqttv5.client:1.2.5'
+    libs 'org.json:json:20211205'
+    libs 'org.apache.commons:commons-jcs3-core:3.0'
+    libs 'org.apache.commons:commons-csv:1.9.0'
+    libs 'commons-net:commons-net:3.0.1'
+    libs 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
+    libs 'com.ibm.db2:jcc:11.5.0.0'
+    libs 'org.eclipse.paho:org.eclipse.paho.mqttv5.client:1.2.5'
 
     testImplementation 'junit:junit:4.13.1'
+
+    configurations.implementation.extendsFrom(configurations.libs)
+}
+
+task getDeps(type: Copy) {
+    from sourceSets.main.runtimeClasspath
+    into 'libs/'
 }
 
 application {
-    mainClassName = 'com.ibm.mas.scada.historian.connector.Connector'
+    mainClass.set("com.ibm.mas.scada.historian.connector.Connector")
 }
 
 test {

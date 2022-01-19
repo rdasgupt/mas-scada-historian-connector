@@ -198,7 +198,7 @@ public class IoTClient {
         return;
     }
 
-    private Object invokeIoTP(String base, String query, int type, Object input, Class resultClass) throws Exception {
+    private <T> Object invokeIoTP(String base, String query, int type, Object input, Class<T> resultClass) throws Exception {
  
         StringBuilder sb = new StringBuilder();
         sb.append(base);
