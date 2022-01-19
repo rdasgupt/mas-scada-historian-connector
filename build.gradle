@@ -56,7 +56,7 @@ task getDeps(type: Copy) {
 }
 
 application {
-    mainClass.set("com.ibm.mas.scada.historian.connector.Connector")
+    mainClass = "com.ibm.mas.scada.historian.connector.Connector"
 }
 
 test {
