@@ -27,7 +27,7 @@ This project includes source to build the connector application that:
 
 Clone the GitHub project
 ```
-$ git clone https://github.ibm.com/Ranjan-Dasgupta/messagesight-installer
+$ git clone https://github.com/ibm-watson-iot/mas-scada-historian-connector
 ```
 
 Build and package using gradle
