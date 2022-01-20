@@ -20,14 +20,15 @@ This project includes source to build the connector application that:
 * OpenJDK 11+
 * Commons JCS
 * org.json
-* JDBC driver for MSSQL, MySQL and IBM DB2
+* JDBC driver for IBM DB2
+* PI SQL JDBC Driver
 
 
 ## Build 
 
 Clone the GitHub project
 ```
-$ git clone https://github.ibm.com/Ranjan-Dasgupta/messagesight-installer
+$ git clone https://github.com/ibm-watson-iot/mas-scada-historian-connector
 ```
 
 Build and package using gradle
