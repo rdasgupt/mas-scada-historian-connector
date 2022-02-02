@@ -241,7 +241,7 @@ public class DataProvider {
                 continue;
             }
 
-            // System.out.println(String.format("tagId=%s value=%s", tagid, value));
+            // System.out.println(String.format("tagId=%s tagPath=%s value=%s", tagid, td.getTagPath(), value));
 
             String evtts = rs.getString("time");
             String tmString = td.getMetrics();
