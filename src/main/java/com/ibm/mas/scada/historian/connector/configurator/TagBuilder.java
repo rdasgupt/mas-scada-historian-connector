@@ -186,6 +186,7 @@ public class TagBuilder {
                                     String metricDataString = metricData.toString();
                                     tagData.setMetrics(metricDataString);
                                     dimensionData.put("tagid", tagid);
+                                    dimensionData.put("tagpath", tagpath);
                                     String dimensionDataString = dimensionData.toString();
                                     tagData.setDimensions(dimensionDataString);
 
