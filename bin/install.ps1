@@ -42,7 +42,7 @@ Write-Host "Downloading Connector code"
 $path = ".\connector.zip"
 if(!(Test-Path $path))
 {
-    Invoke-WebRequest -Uri "https://github.com/ibm-watson-iot/mas-scada-bulkingest/archive/master.zip" -OutFile ".\connector.zip"
+    Invoke-WebRequest -Uri "https://github.com/ibm-watson-iot/mas-scada-historian-connector/archive/master.zip" -OutFile ".\connector.zip"
 }
 
 # Download JRE
@@ -55,7 +55,7 @@ if(!(Test-Path $path))
 
 # Expand Connector code
 Write-Host "Expanding connector.zip, and copying binaries and libraries in C:\IBM\masshc"
-$path = ".\connector\mas-scada-bulkingest-master"
+$path = ".\connector\mas-scada-historian-connector"
 if(!(Test-Path $path))
 {
     Expand-Archive -Path connector.zip
@@ -63,8 +63,8 @@ if(!(Test-Path $path))
 $path = "$InstallPath\bin"
 if(!(Test-Path $path))
 {
-    Copy-Item -Path .\connector\mas-scada-bulkingest-master\bin -Recurse -Destination "$InstallPath\bin"
-    Copy-Item -Path .\connector\mas-scada-bulkingest-master\lib -Recurse -Destination "$InstallPath\lib"
+    Copy-Item -Path .\connector\mas-scada-historian-connector\bin -Recurse -Destination "$InstallPath\bin"
+    Copy-Item -Path .\connector\mas-scada-historian-connector\lib -Recurse -Destination "$InstallPath\lib"
 }
 
 # Expand jre
