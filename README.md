@@ -22,6 +22,8 @@ This project includes source to build the connector application that:
 * org.json
 * JDBC driver for IBM DB2
 * PI SQL JDBC Driver
+* mySQL JDBC Driver
+* MSSQL JDBC Driver
 
 
 ## Build 

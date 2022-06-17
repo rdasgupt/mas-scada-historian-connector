@@ -12,6 +12,7 @@ Provide connection configuration object in a json formated file:
 {
     "id": "String",
     "historian": {
+        "type": "String",
         "jdbcUrl": "String",
         "user": "String",
         "password": "String",
@@ -27,11 +28,14 @@ Provide connection configuration object in a json formated file:
         "orgId": "String",
         "host": "String",
         "port": integer,
-        "asHost": "String",
         "schemaName": "String",
+        "tenantId": "String",
         "apiKey": "String",
         "apiToken": "String",
-        "tenantId": "String"
+        "asHost": "String",
+        "asKey": "String",
+        "asToken": "String",
+        "asAPIVersion": integer
     }
 }
 ```
@@ -42,6 +46,7 @@ Where:
 * `historian`: This configuration object is required. The configuration items specified in this object are used
 to connect to SCADA historian to extract device data and send to MAS Monitor.
     ** Required Items: **
+    * `type`: Historian type. The valid options are "osipi" or "ignition".
     * `jdbcUrl`: JDBC URL to connect to the historian database. Example "jdbc:pisql://10.208.72.125/Data Source=pidemo; Integrated Security=SSPI;"
     * `user`: User name to connect to historian.
     * `password`: Password to connect to historian.
@@ -58,11 +63,14 @@ to connect to SCADA historian to extract device data and send to MAS Monitor.
     * `orgId`: Specifies a six character organization Id assigned to your IoT Platform service.
     * `host`: Specifies host to connect to MAS to send device data
     * `port`: Specifies port to connect to MAS 
-    * `asHost`: Specifies host to configure dimensions
+    * `apiKey`: Specifies API Key to configure device types, devices, interfaces and send MQTT messages.
+    * `apiToken`: Specifies API Token to configure device types, devices, interfaces and send MQTT messages.
     * `schemaName`: Specifies the schema to configure dimensions
-    * `apiKey`: Specifies API Key.
-    * `apiToken`: Specifies API Token.
     * `tenantid`: Specifies tenant id.
+    * `asHost`: Specifies host to configure dimensions
+    * `asAPIVersion`: Specifies API Version. Valid options are 1 and 2.
+    * `asKey`: Specifies API Key to configure dimensions
+    * `asToken`: Specifies API Token to configure dimensions
 
 
 ## Sample `connection.json` Configuration File
@@ -71,6 +79,7 @@ to connect to SCADA historian to extract device data and send to MAS Monitor.
 {
     "id": "Connection JSON file of ABC Corp.",
     "historian": {
+        "type": "osipi",
         "jdbcUrl": "jdbc:pisql://10.208.72.125/Data Source=pidemo; Integrated Security=SSPI;",
         "user": "Administrator",
         "password": "xxxxxxxxxx",
@@ -78,15 +87,18 @@ to connect to SCADA historian to extract device data and send to MAS Monitor.
         "startDate": "2021-12-05 05:00:00"
     },
     "iotp": {
-        "url": "https://xxxxxx.internetofthings.ibmcloud.com/api/v0002",
-        "orgId": "xxxxxx",
-        "host": "xxxxxx.messaging.internetofthings.ibmcloud.com",
-        "port": 8883,
-        "asHost": "api-xxxxx.connectedproducts.internetofthings.ibmcloud.com",
+        "url": "https://tenant1.iot.monitordemo.ibmmam.com/api/v0002",
+        "orgId": "tenant1",
+        "host": "tenant1.messaging.iot.monitordemo.ibmmam.com",
+        "port": 443,
         "schemaName": "BLUADMIN",
         "apiKey": "a-xxxxxx-tavok0xsxt",
         "apiToken": "cNyH_XXXXXX-p2ppVl",
-        "tenantId": "xxxxx"
+        "tenantId": "tenant1",
+        "asHost": "tenant1.api.monitor.monitordemo3.ibmmam.com",
+        "asAPIVersion": 1,
+        "asKey": "xxxxxxxxxxxxxxxxxx",
+        "asToken": "xxxxxxxxxxxxxxxxxxxx"
     }
 }
 ```

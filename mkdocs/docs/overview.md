@@ -7,6 +7,11 @@ IBM MAS SCADA Historian connector application performs the following tasks:
 - Extracts tag data from SCADA historian.
 - Transforms tag data into MQTT events and send events to MAS Monitor. The device events can be used by IBM MAS Monitor for visualizatiion and AI-driven analytics. 
 
+Supported SCADA Historians:
+
+- OSISOft data historian
+- Ignition Historian
+
 ## High-Level Architecture
 
 ![MASHistorianConnector](overview.png)
