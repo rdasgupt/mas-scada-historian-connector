@@ -8,11 +8,12 @@
  * Copyright Office.
  */
 
-package com.ibm.mas.scada.historian.connector.provider.impl.osipi;
+package com.ibm.mas.scada.historian.connector.provider.impl.ignition;
 
 import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.nio.file.*;
 import java.sql.*;
 import java.sql.Types.*;
 import java.util.logging.Logger;
@@ -20,6 +21,7 @@ import java.util.logging.Level;
 import java.util.List;
 import java.util.Set;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Properties;
 import org.json.JSONObject;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -28,6 +30,7 @@ import com.ibm.mas.scada.historian.connector.utils.Constants;
 import com.ibm.mas.scada.historian.connector.utils.Copyright;
 import com.ibm.mas.scada.historian.connector.utils.OffsetRecord;
 import com.ibm.mas.scada.historian.connector.utils.ServiceUtils;
+import com.ibm.mas.scada.historian.connector.utils.ConnectorException;
 import com.ibm.mas.scada.historian.connector.configurator.Config;
 import com.ibm.mas.scada.historian.connector.configurator.TagData;
 import com.ibm.mas.scada.historian.connector.configurator.TagDataCache;
@@ -49,6 +52,8 @@ public class DataProvider {
     private static String dbPass;
     private static int sourceDBColumnCount = 0;
     private static long processedRowCount = 0;
+    private static int connectorType = Constants.CONNECTOR_DEVICE;
+    private static String clientSite;
 
     public DataProvider (Config config, TagDataCache tc,  OffsetRecord offsetRecord, ArrayBlockingQueue<String[]> iotDataQueue) throws Exception {
         if (config == null || iotDataQueue == null || offsetRecord == null) {
@@ -59,26 +64,37 @@ public class DataProvider {
         this.tc = tc;
         this.offsetRecord = offsetRecord;
         this.iotDataQueue = iotDataQueue;
+        this.connectorType = config.getConnectorType();
+        this.clientSite = config.getClientSite();
 
         JSONObject connConfig = config.getConnectionConfig();
         JSONObject historian = connConfig.getJSONObject("historian");
         sourceJDBCUrl = historian.getString("jdbcUrl");
         String schema = historian.getString("schema");
         String database = historian.getString("database");
+        String serverTimezone = historian.getString("serverTimezone");
 
-        sqlQueryTemplate = "SELECT * FROM " + schema + "." + database + " where time >= '%s.000' and time < '%s.000';";
+        String sqlTemplateFile = config.getConfigDir() + "/deviceSqlTemplate.sql";
+        if ( connectorType == Constants.CONNECTOR_ALARM) {
+            sqlTemplateFile = config.getConfigDir() + "/alarmSqlTemplate.sql";
+        }
+        sqlQueryTemplate = new String(Files.readAllBytes(Paths.get(sqlTemplateFile)));
 
         dbUser = historian.getString("user");
         dbPass = historian.getString("password");
 
         String dbType = historian.getString("dbType");
+        this.type = Constants.DB_SOURCE_TYPE_UNKNOWN;
         if (dbType.equals("mssql")) {
             this.type = Constants.DB_SOURCE_TYPE_MSSQL;
-        } if (dbType.equals("pisql")) {
-            this.type = Constants.DB_SOURCE_TYPE_PISQL;
-        } else {
+        } if (dbType.equals("mysql")) {
             this.type = Constants.DB_SOURCE_TYPE_MYSQL;
+            if (!serverTimezone.equals("")) {
+                sourceJDBCUrl = sourceJDBCUrl + "?serverTimezone=" + serverTimezone;
+            }
         }
+
+        logger.info(String.format("Source DB URL: %s User: %s  Password: %s", sourceJDBCUrl, dbUser, dbPass));
     }    
 
     /* Extract data from historian */
@@ -105,7 +121,7 @@ public class DataProvider {
         logger.info(String.format("StartTime:%d EndTime:%d Year:%d Month:%d currTime:%d", 
             startTimeSecs, endTimeSecs, year, month, (cycleStartTimeMillis/1000)));
 
-        String querySql = getDBSql(startTimeMilli, endTimeMilli);
+        String querySql = getDBSql(startTimeMilli, endTimeMilli, year, month);
         logger.info("Extract SQL: " + querySql);
 
         conn = getSourceConnection();
@@ -224,41 +240,42 @@ public class DataProvider {
     private int setIotDataQueue(ResultSet rs, ArrayBlockingQueue<String[]> iotDataQueue) throws Exception {
         int rowCount = 0;
 
-        // ServiceUtils.listTags(tc);
-
         while (rs.next()) {
-            String tagid = "";
             TagData td = null;
 
-            String tagpathAndId = rs.getString("tag");
-            String value = rs.getString("value");
-            tagid = tagpathAndId.substring(tagpathAndId.lastIndexOf('.') + 1).trim();
+            String tagid = rs.getString("tagid");
+            String tagpath = rs.getString("tagpath");
+            String idString = clientSite + ":" + tagid + ":" + tagpath;
+            idString = idString.trim();
 
             try {
-                td = tc.get(tagid);
+                td = tc.get(idString);
             } catch(Exception e) { }
             if (td == null) {
-                logger.warning("Tagid is not in cache: " + tagid);
+                logger.warning("Tag data is not in cache: " + idString);
                 continue;
             }
 
             // System.out.println(String.format("tagId=%s tagPath=%s value=%s", tagid, td.getTagPath(), value));
 
-            String evtts = rs.getString("time");
+            String evtts = rs.getString("t_stamp");
             String tmString = td.getMetrics();
             JSONObject tm = new JSONObject(tmString);
-            String [] iotData = new String[Constants.IOTP_OSIPI_TOTAL];
-            iotData[Constants.IOTP_OSIPI_DEVICETYPE] = td.getDeviceType();
-            iotData[Constants.IOTP_OSIPI_DEVICEID] = td.getDeviceId();
-            iotData[Constants.IOTP_OSIPI_EVT_NAME] = "scadaevent";
-            iotData[Constants.IOTP_OSIPI_EVT_TIMESTAMP] = evtts.replace(' ', 'T') + "Z";
-            iotData[Constants.IOTP_OSIPI_VALUE] = value;
-            iotData[Constants.IOTP_OSIPI_DECIMALACCURACY] = tm.getString("decimalAccuracy"); 
-            iotData[Constants.IOTP_OSIPI_NAME] = tm.getString("name");
-            iotData[Constants.IOTP_OSIPI_LABEL] = tm.getString("label");
-            iotData[Constants.IOTP_OSIPI_TYPE] = tm.getString("type");
-            iotData[Constants.IOTP_OSIPI_UNIT] = tm.getString("unit");
-            iotData[Constants.IOTP_OSIPI_TAG] = td.getTagPath();
+            String [] iotData = new String[Constants.IOTP_IGNITION_DEVICE_TOTAL];
+            iotData[Constants.IOTP_IGNITION_DEVICE_DEVICETYPE] = td.getDeviceType();
+            iotData[Constants.IOTP_IGNITION_DEVICE_DEVICEID] = td.getDeviceId();
+            iotData[Constants.IOTP_IGNITION_DEVICE_EVT_NAME] = "scadaevent";
+            // iotData[Constants.IOTP_IGNITION_DEVICE_EVT_TIMESTAMP] = evtts.replace(' ', 'T') + "Z";
+            iotData[Constants.IOTP_IGNITION_DEVICE_EVT_TIMESTAMP] = evtts;
+            iotData[Constants.IOTP_IGNITION_DEVICE_INTVALUE] = rs.getString("intvalue");
+            iotData[Constants.IOTP_IGNITION_DEVICE_FLOATVALUE] = rs.getString("floatvalue");
+            iotData[Constants.IOTP_IGNITION_DEVICE_STRINGVALUE] = rs.getString("stringvalue");
+            iotData[Constants.IOTP_IGNITION_DEVICE_DATEVALUE] = rs.getString("datevalue");
+            iotData[Constants.IOTP_IGNITION_DEVICE_TYPE] = rs.getString("datatype");
+            iotData[Constants.IOTP_IGNITION_DEVICE_DECIMALACCURACY] = tm.optString("decimalAccuracy", ""); 
+            iotData[Constants.IOTP_IGNITION_DEVICE_UNIT] = tm.optString("unit", "");
+            iotData[Constants.IOTP_IGNITION_DEVICE_TAG] = td.getTagPath();
+
             iotDataQueue.put(iotData);
 
             rowCount += 1;
@@ -291,6 +308,11 @@ public class DataProvider {
             ex.printStackTrace();
         }
 
+        return sqlStr;
+    }
+
+    private static String getDBSql(long startMilli, long endMilli, int year, int month) {
+        String sqlStr = String.format(sqlQueryTemplate, year, month, startMilli, endMilli);
         return sqlStr;
     }
 

@@ -39,9 +39,13 @@ public class IoTClient {
     private RestClient restClient;
     private ObjectMapper objectMapper;
 
-    public IoTClient (String orgId, String key, String token) {
+    public IoTClient (String url, String orgId, String key, String token) {
         this.orgId = orgId;
-        this.baseUrl = "https://" + orgId + ".internetofthings.ibmcloud.com/api/v0002";
+        if (url.equals("")) {
+            this.baseUrl = "https://" + orgId + ".internetofthings.ibmcloud.com/api/v0002";
+        } else {
+            this.baseUrl = url;
+        }
         this.authHeader = "Basic " + Base64.getEncoder().encodeToString((key + ":" + token).getBytes(StandardCharsets.UTF_8));
         this.restClient = new RestClient(baseUrl, Constants.AUTH_BASIC, key, token);
         this.deviceToken = token;

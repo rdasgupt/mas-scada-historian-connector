@@ -37,18 +37,17 @@ public final class Constants {
     public static final int HTTP_DELETE = 5;
 
     /** SCADA Historian types */
-    public static final String SERVICE_TYPE_OSIPI = "osipi";
-    public static final String SERVICE_TYPE_IGNITION = "ignition";
+    public static final int SCADA_OSIPI = 1;
+    public static final int SCADA_IGNITION = 2;
+
+    /** Connector types */
+    public static final int CONNECTOR_DEVICE = 1;
+    public static final int CONNECTOR_ALARM = 2;
 
     /** MAS upload/publish types */
     public static final String PUBLISH_TYPE_MQTT = "mqtt";
     public static final String PUBLISH_TYPE_KAFKA = "kafka";
     public static final String PUBLISH_TYPE_DBUPLOAD = "dbupload";
-
-    /** Connector type Alarm. */
-    public static final int CONNECTOR_ALARM = 1;
-    /** Connector type Device. */
-    public static final int CONNECTOR_DEVICE = 2;
 
     /** Number of stats of the connector. */
     public static final int CONNECTOR_STATS_TAGS = 6;
@@ -57,6 +56,8 @@ public final class Constants {
     public static final int DB_DEST_TYPE_DB2 = 1;
     /** Destination (Monitor) database type POSTGRES. */
     public static final int DB_DEST_TYPE_POSTGRE = 2;
+    /** Source (SCADA) database type unknown. */
+    public static final int DB_SOURCE_TYPE_UNKNOWN = 0;
     /** Source (SCADA) database type MSSQL. */
     public static final int DB_SOURCE_TYPE_MSSQL = 1;
     /** Source (SCADA) database type MYSQL. */
@@ -100,6 +101,35 @@ public final class Constants {
     public static final int IOTP_OSIPI_UNIT = 9;
     public static final int IOTP_OSIPI_TAG = 10;
     public static final int IOTP_OSIPI_TOTAL = 11;
+
+    /** IoT Data for IGNITION Device **/
+    public static final int IOTP_IGNITION_DEVICE_DEVICETYPE = 0;
+    public static final int IOTP_IGNITION_DEVICE_DEVICEID = 1;
+    public static final int IOTP_IGNITION_DEVICE_EVT_NAME = 2;
+    public static final int IOTP_IGNITION_DEVICE_EVT_TIMESTAMP = 3;
+    public static final int IOTP_IGNITION_DEVICE_INTVALUE = 4;
+    public static final int IOTP_IGNITION_DEVICE_FLOATVALUE = 5;
+    public static final int IOTP_IGNITION_DEVICE_STRINGVALUE = 6;
+    public static final int IOTP_IGNITION_DEVICE_DATEVALUE = 7;
+    public static final int IOTP_IGNITION_DEVICE_DECIMALACCURACY = 8;
+    public static final int IOTP_IGNITION_DEVICE_TYPE = 9;
+    public static final int IOTP_IGNITION_DEVICE_UNIT = 10;
+    public static final int IOTP_IGNITION_DEVICE_TAG = 11;
+    public static final int IOTP_IGNITION_DEVICE_TOTAL = 12;
+
+    /** IoT Data for IGNITION Alarm **/
+    public static final int IOTP_IGNITION_ALARM_DEVICETYPE = 0;
+    public static final int IOTP_IGNITION_ALARM_DEVICEID = 1;
+    public static final int IOTP_IGNITION_ALARM_EVT_NAME = 2;
+    public static final int IOTP_IGNITION_ALARM_EVT_TIMESTAMP = 3;
+    public static final int IOTP_IGNITION_ALARM_VALUE = 4;
+    public static final int IOTP_IGNITION_ALARM_DECIMALACCURACY = 5;
+    public static final int IOTP_IGNITION_ALARM_NAME = 6;
+    public static final int IOTP_IGNITION_ALARM_LABEL = 7;
+    public static final int IOTP_IGNITION_ALARM_TYPE = 8;
+    public static final int IOTP_IGNITION_ALARM_UNIT = 9;
+    public static final int IOTP_IGNITION_ALARM_TAG = 10;
+    public static final int IOTP_IGNITION_ALARM_TOTAL = 11;
 
     /** IOT MQTT Client types */
     public static final int DEVICE_CLIENT = 1;

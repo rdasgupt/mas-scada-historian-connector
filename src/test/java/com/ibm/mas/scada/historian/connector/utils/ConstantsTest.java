@@ -30,8 +30,8 @@ public class ConstantsTest {
         assertEquals(Constants.HTTP_GET, 1);
         assertEquals(Constants.HTTP_POST, 2);
         assertEquals(Constants.HTTP_PUT, 3);
-        assertEquals(Constants.CONNECTOR_ALARM, 1);
-        assertEquals(Constants.CONNECTOR_DEVICE, 2);
+        assertEquals(Constants.CONNECTOR_DEVICE, 1);
+        assertEquals(Constants.CONNECTOR_ALARM, 2);
         assertEquals(Constants.CONNECTOR_STATS_TAGS, 6);
         assertEquals(Constants.DB_DEST_TYPE_DB2, 1);
         assertEquals(Constants.DB_DEST_TYPE_POSTGRE, 2);

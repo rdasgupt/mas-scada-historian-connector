@@ -154,7 +154,7 @@ public class Client implements MqttCallback {
         if (topicString == null) {
             topicString = "iot-2/evt/" + eventName + "/fmt/json";
         }
-        // logger.fine("MQTT Publish: " + topicString + " | " + payload);
+        logger.info("MQTT Publish: " + topicString + " | " + payload);
         if (mqttClientType == Constants.MQTT_SYNC) {
             connSync.publish(topicString.trim(), msg);
         } else {

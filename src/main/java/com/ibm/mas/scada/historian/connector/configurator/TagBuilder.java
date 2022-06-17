@@ -12,6 +12,7 @@ package com.ibm.mas.scada.historian.connector.configurator;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Arrays;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.logging.Logger;
+import java.util.UUID;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -45,6 +47,8 @@ public class TagBuilder {
     private static TagDataCache tc;
     private static Pattern mapPattern = Pattern.compile("\\{([^}]*?)\\}");
     private static int mappingFormat;
+    private static int scadaType;
+    private static String clientSite;
 
     public TagBuilder (Config config, Cache cache) throws Exception {
         super();
@@ -55,6 +59,7 @@ public class TagBuilder {
         this.logger = config.getLogger();
         this.configDir = config.getConfigDir();
         this.dataDir = config.getDataDir();
+        this.scadaType = config.getScadaType();
 
         JSONObject mappingConfig = config.getMappingConfig();
         this.tmc = new TagmapConfig(mappingConfig);
@@ -67,6 +72,7 @@ public class TagBuilder {
         this.tagTypes = tmc.getTagTypes();
         this.mappingFormat = tmc.getMappingFormat();
         this.tc = new TagDataCache(cache);
+        this.clientSite = config.getClientSite();
     }
 
     public void build () {
@@ -128,10 +134,14 @@ public class TagBuilder {
                 for (CSVRecord csvRecord : csvParser) {
                     total += 1;
 
-                    String objectType = csvRecord.get("ObjectType");
+                    String objectType = "";
+                    if (scadaType == Constants.SCADA_OSIPI) {
+                        objectType = csvRecord.get("ObjectType");
+                    }
 
                     /* only process Attributes */
-                    if (objectType.equals("Attribute")) {
+                    if ((scadaType == Constants.SCADA_OSIPI && objectType.equals("Attribute")) ||
+                        (scadaType == Constants.SCADA_IGNITION)) {
 
                         tagpath = getValueFromCsvRecord(tagpathCols, true, csvRecord, tagpathMap).trim();
                         if (!tagType.verifyTagpath(tagpath)) {
@@ -211,7 +221,7 @@ public class TagBuilder {
     private void build_forCustomCSV () {
         int j;
 
-        String[] tagpathCols = getColumnNames(2, tagpathMap);
+        String[] tagpathCols = getColumnNames(1, tagpathMap);
         String[] tagidCols = getColumnNames(1, tagidMap);
         String[] metricNames = metrics.getNames(metrics);
         String[] dimensionNames = dimensions.getNames(dimensions);
@@ -255,19 +265,30 @@ public class TagBuilder {
 
                     total += 1;
 
-                    String objectType = csvRecord.get("ObjectType");
+                    String objectType = "";
+                    if (scadaType == Constants.SCADA_OSIPI) {
+                        objectType = csvRecord.get("ObjectType");
+                    }
 
                     /* only process Attributes */
-                    if (objectType.equals("Attribute")) {
+                    if ((scadaType == Constants.SCADA_OSIPI && objectType.equals("Attribute")) ||
+                        (scadaType == Constants.SCADA_IGNITION)) {
 
                         tagpath = getValueFromCsvRecord(tagpathCols, true, csvRecord, tagpathMap).trim();
 
                         if (tagType.verifyTagpath(tagpath)) {
+                            TagData td;
                             tagpath = tagpath.replaceAll("\\|Tagname", "");
                             tagid = getValueFromCsvRecord(tagidCols, false, csvRecord, tagidMap).trim();
+                            String idString = clientSite + ":" + tagid + ":" + tagpath;
+                            idString = idString.trim();
 
                             /* no need to set cache if exist */
-                            TagData td = tc.get(tagid);
+                            if (scadaType == Constants.SCADA_IGNITION) {
+                                td = tc.get(idString);
+                            } else {
+                                td = tc.get(tagid);
+                            }
                             if (td != null) {
                                 continue;
                             }
@@ -275,7 +296,12 @@ public class TagBuilder {
                             TagData tagData = new TagData();
                             tagData.setServiceName(serviceName);
                             tagData.setTagPath(tagpath);
-                            tagData.setDeviceId(tagid);
+                            if (scadaType == Constants.SCADA_IGNITION) {
+                                String did = UUID.nameUUIDFromBytes(idString.getBytes()).toString();
+                                tagData.setDeviceId(did);
+                            } else {
+                                tagData.setDeviceId(tagid);
+                            }
                             tagData.setDeviceType(type);
 
                             /* add metrics */
@@ -306,9 +332,9 @@ public class TagBuilder {
                             String dimensionDataString = dimensionData.toString();
                             tagData.setDimensions(dimensionDataString);
 
-                            /* add Tag data in Tagpath and Tagid cache */
+                            /* add Tag data in TagData cache */
                             // System.out.println(String.format("TID: %s %d %s", tagid, tagpath.length(), tagpath));
-                            tc.put(tagid, tagData);
+                            tc.put(idString, tagData);
 
                             processed += 1;
 
@@ -358,6 +384,7 @@ public class TagBuilder {
         if (columnNames.length == 0) {
             return dval;
         }
+
         for (int j = 0; j < columnNames.length; j++) {
             String colName = columnNames[j];
             if (j == 0) {

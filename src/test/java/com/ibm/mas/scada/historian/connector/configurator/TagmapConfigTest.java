@@ -57,7 +57,9 @@ public class TagmapConfigTest {
         TagmapConfig tm = null;
         try {
             tm = new TagmapConfig(mappingConfig);
-        } catch (Exception e) { }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         assertNotNull("should not be null", tm);
         assertEquals("Service1", tm.getServiceName());
         assertEquals("pidemo.csv", tm.getCsvFileName());

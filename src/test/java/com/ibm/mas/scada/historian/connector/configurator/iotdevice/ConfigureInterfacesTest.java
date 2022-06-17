@@ -38,7 +38,7 @@ public class ConfigureInterfacesTest {
     @Test
     public void test01() {
         try {
-            ConfigureInterfaces ci = new ConfigureInterfaces(dataDir, "o77abp", "a-o77abp-pgf2dnn1w5", "t*?znzYpoPvKU5Et07");
+            ConfigureInterfaces ci = new ConfigureInterfaces(0, dataDir, "o77abp", "a-o77abp-pgf2dnn1w5", "t*?znzYpoPvKU5Et07");
             assertNotNull("should not be null", ci);
             IoTClient iotp = ci.getIotp();
             iotp.createDeviceType("TestType", "Device");

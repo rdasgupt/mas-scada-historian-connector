@@ -17,8 +17,10 @@ import com.ibm.mas.scada.historian.connector.configurator.Config;
 import com.ibm.mas.scada.historian.connector.configurator.TagDataCache;
 import com.ibm.mas.scada.historian.connector.provider.Provider;
 import com.ibm.mas.scada.historian.connector.provider.impl.OsipiProvider;
+import com.ibm.mas.scada.historian.connector.provider.impl.IgnitionProvider;
 import com.ibm.mas.scada.historian.connector.utils.Copyright;
 import com.ibm.mas.scada.historian.connector.utils.OffsetRecord;
+import com.ibm.mas.scada.historian.connector.utils.Constants;
 
 public class ProviderManager {
 
@@ -39,7 +41,13 @@ public class ProviderManager {
     }
 
     public void start() throws Exception {
-        provider = new OsipiProvider();
+        if (config.getScadaType() == Constants.SCADA_OSIPI) {
+            logger.info("Data Provider: OSIPI");
+            provider = new OsipiProvider();
+        } else {
+            logger.info("Data Provider: IGNITION");
+            provider = new IgnitionProvider();
+        }
         provider.init(config, tc, offsetRecord, iotDataQueue);
         startDataProviderThread();
     }

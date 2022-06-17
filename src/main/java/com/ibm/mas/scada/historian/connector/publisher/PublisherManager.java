@@ -12,6 +12,7 @@ package com.ibm.mas.scada.historian.connector.publisher;
 
 import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.Arrays;
 import org.json.JSONObject;
 import java.util.concurrent.ArrayBlockingQueue;
 
@@ -34,12 +35,14 @@ public class PublisherManager {
     private static OffsetRecord offsetRecord;
     private static int iotClientType;
     private static String publishProtocol;
+    private static int scadaType;
 
     public PublisherManager(Config config, ArrayBlockingQueue<String[]> iotDataQueue, OffsetRecord offsetRecord) {
         this.config = config;
         this.logger = config.getLogger();
         this.iotDataQueue = iotDataQueue;
         this.offsetRecord = offsetRecord;
+        this.scadaType = config.getScadaType();
         JSONObject connectionConfig = config.getConnectionConfig();
         this.publishProtocol = connectionConfig.optString("publishProtocol", Constants.PUBLISH_TYPE_MQTT);
         this.iotClientType = connectionConfig.optInt("iotClientType", Constants.DEVICE_CLIENT);
@@ -73,19 +76,57 @@ public class PublisherManager {
             String lastClientId = "";
             while (true) {
                 String[] iotDataItems = iotDataQueue.take();
-                String deviceType = iotDataItems[Constants.IOTP_OSIPI_DEVICETYPE];
-                String deviceId = iotDataItems[Constants.IOTP_OSIPI_DEVICEID];
-                String eventName = iotDataItems[Constants.IOTP_OSIPI_EVT_NAME];
-                String clientId = "d:" + orgId + ":" + deviceType + ":" + deviceId;
+
                 JSONObject msgObject = new JSONObject();
-                msgObject.put("evt_timestamp", iotDataItems[Constants.IOTP_OSIPI_EVT_TIMESTAMP]);
-                msgObject.put("value", iotDataItems[Constants.IOTP_OSIPI_VALUE]);
-                msgObject.put("decimalAccuracy", iotDataItems[Constants.IOTP_OSIPI_DECIMALACCURACY]);
-                msgObject.put("name", iotDataItems[Constants.IOTP_OSIPI_NAME]);
-                msgObject.put("label", iotDataItems[Constants.IOTP_OSIPI_LABEL]);
-                msgObject.put("type", iotDataItems[Constants.IOTP_OSIPI_TYPE]);
-                msgObject.put("unit", iotDataItems[Constants.IOTP_OSIPI_UNIT]);
-                msgObject.put("tag", iotDataItems[Constants.IOTP_OSIPI_TAG]);
+                String deviceType;
+                String deviceId;
+                String eventName;
+                String clientId;
+
+                if (scadaType == Constants.SCADA_OSIPI) {
+                    deviceType = iotDataItems[Constants.IOTP_OSIPI_DEVICETYPE];
+                    deviceId = iotDataItems[Constants.IOTP_OSIPI_DEVICEID];
+                    eventName = iotDataItems[Constants.IOTP_OSIPI_EVT_NAME];
+                    msgObject.put("evt_timestamp", Integer.valueOf(iotDataItems[Constants.IOTP_OSIPI_EVT_TIMESTAMP]));
+                    msgObject.put("value", iotDataItems[Constants.IOTP_OSIPI_VALUE]);
+                    msgObject.put("decimalAccuracy", iotDataItems[Constants.IOTP_OSIPI_DECIMALACCURACY]);
+                    msgObject.put("name", iotDataItems[Constants.IOTP_OSIPI_NAME]);
+                    msgObject.put("label", iotDataItems[Constants.IOTP_OSIPI_LABEL]);
+                    msgObject.put("type", iotDataItems[Constants.IOTP_OSIPI_TYPE]);
+                    msgObject.put("unit", iotDataItems[Constants.IOTP_OSIPI_UNIT]);
+                    msgObject.put("tag", iotDataItems[Constants.IOTP_OSIPI_TAG]);
+                } else {
+                    deviceType = iotDataItems[Constants.IOTP_IGNITION_DEVICE_DEVICETYPE];
+                    deviceId = iotDataItems[Constants.IOTP_IGNITION_DEVICE_DEVICEID];
+                    eventName = iotDataItems[Constants.IOTP_IGNITION_DEVICE_EVT_NAME];
+                    msgObject.put("evt_timestamp", iotDataItems[Constants.IOTP_IGNITION_DEVICE_EVT_TIMESTAMP]);
+                    if (iotDataItems[Constants.IOTP_IGNITION_DEVICE_INTVALUE] == null) {
+                        msgObject.put("intvalue", "");
+                    } else {
+                        msgObject.put("intvalue", iotDataItems[Constants.IOTP_IGNITION_DEVICE_INTVALUE]);
+                    }
+                    if (iotDataItems[Constants.IOTP_IGNITION_DEVICE_FLOATVALUE] == null) {
+                        msgObject.put("floatvalue", "");
+                    } else {
+                        msgObject.put("floatvalue", iotDataItems[Constants.IOTP_IGNITION_DEVICE_FLOATVALUE]);
+                    }
+                    if (iotDataItems[Constants.IOTP_IGNITION_DEVICE_STRINGVALUE] == null) {
+                        msgObject.put("stringvalue", "");
+                    } else {
+                        msgObject.put("stringvalue", iotDataItems[Constants.IOTP_IGNITION_DEVICE_STRINGVALUE]);
+                    }
+                    if (iotDataItems[Constants.IOTP_IGNITION_DEVICE_DATEVALUE] == null) {
+                        msgObject.put("datevalue", "");
+                    } else {
+                        msgObject.put("datealue", iotDataItems[Constants.IOTP_IGNITION_DEVICE_DATEVALUE]);
+                    }
+                    msgObject.put("decimalAccuracy", iotDataItems[Constants.IOTP_IGNITION_DEVICE_DECIMALACCURACY]);
+                    msgObject.put("type", iotDataItems[Constants.IOTP_IGNITION_DEVICE_TYPE]);
+                    msgObject.put("unit", iotDataItems[Constants.IOTP_IGNITION_DEVICE_UNIT]);
+                    msgObject.put("tag", iotDataItems[Constants.IOTP_IGNITION_DEVICE_TAG]);
+                }
+
+                clientId = "d:" + orgId + ":" + deviceType + ":" + deviceId;
                 if (clientId.equals(lastClientId)) { 
                     publisher.publish(null, eventName, msgObject.toString());
                 } else {
