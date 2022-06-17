@@ -33,6 +33,7 @@ public class TagConfigurator {
     private static String orgId;
     private static String key;
     private static String token;
+    private static String url;
     private static String baseUrl;
     private static JSONObject connectionConfig;
     private static JSONObject iotpConfig;
@@ -41,6 +42,8 @@ public class TagConfigurator {
     private static int totalInCache;
     private static TagmapConfig tmc;
     private static Set<String> tagList;
+    private static int SAASEnv;
+    private static int scadaType;
 
     public TagConfigurator (Config config, TagDataCache tc, TagmapConfig tmc) {
         super();
@@ -50,11 +53,14 @@ public class TagConfigurator {
         this.dataDir = config.getDataDir();
         this.connectionConfig = config.getConnectionConfig();
         this.mappingConfig = config.getMappingConfig();
+        this.SAASEnv = config.isSAASEnv();
+        this.scadaType = config.getScadaType();
         this.iotpConfig = connectionConfig.getJSONObject("iotp");
         this.orgId = iotpConfig.getString("orgId");
         this.key = iotpConfig.getString("apiKey");
         this.token = iotpConfig.getString("apiToken");
         this.baseUrl = iotpConfig.getString("url") + "/";
+        this.url = iotpConfig.getString("url");
         this.tc = tc;
         this.tmc = tmc;
         this.tagList = tc.getTagList();
@@ -112,7 +118,12 @@ public class TagConfigurator {
                 }
 
                 try { 
-                    ConfigureInterfaces confIntf = new ConfigureInterfaces(dataDir, orgId, key, token);
+                    ConfigureInterfaces confIntf;
+                    if (SAASEnv == 0) {
+                        confIntf = new ConfigureInterfaces(scadaType, url, dataDir, orgId, key, token);
+                    } else {
+                        confIntf = new ConfigureInterfaces(scadaType, dataDir, orgId, key, token);
+                    }
                     confIntf.config(type);
  
                     /* activate interface */

@@ -12,6 +12,7 @@ package com.ibm.mas.scada.historian.connector.configurator.iotdevice;
 
 import org.json.JSONObject;
 import com.ibm.mas.scada.historian.connector.utils.Copyright;
+import com.ibm.mas.scada.historian.connector.utils.Constants;
 
 public class  CreateSchemas {
 
@@ -20,7 +21,7 @@ public class  CreateSchemas {
     private CreateSchemas() {
     }
 
-    public static JSONObject buildSchema(String schemaType)
+    public static JSONObject buildSchema(int scadaType, String schemaType)
     {
         JSONObject schema = new JSONObject();
         schema.put("$schema", "http://json-schema.org/draft-04/schema#");
@@ -37,8 +38,9 @@ public class  CreateSchemas {
 
         JSONObject tagEvtTimeProp = new JSONObject();
         tagEvtTimeProp.put("description", "Event timestamp");
-        tagEvtTimeProp.put("type", "string");
-        tagEvtTimeProp.put("format", "date-time");
+        tagEvtTimeProp.put("type", "number");
+        // tagEvtTimeProp.put("type", "string");
+        // tagEvtTimeProp.put("format", "date-time");
         jsonProperties.put("evt_timestamp", tagEvtTimeProp);
 
         JSONObject tagDAProp = new JSONObject();
@@ -46,15 +48,43 @@ public class  CreateSchemas {
         tagDAProp.put("type", "string");
         jsonProperties.put("decimalAccuracy", tagDAProp);
 
-        JSONObject tagNameProp = new JSONObject();
-        tagNameProp.put("description", "Tag Name");
-        tagNameProp.put("type", "string");
-        jsonProperties.put("name", tagNameProp);
+        if (scadaType == Constants.SCADA_OSIPI) {
+            JSONObject tagNameProp = new JSONObject();
+            tagNameProp.put("description", "Tag Name");
+            tagNameProp.put("type", "string");
+            jsonProperties.put("name", tagNameProp);
 
-        JSONObject labelProp = new JSONObject();
-        labelProp.put("description", "Label");
-        labelProp.put("type", "string");
-        jsonProperties.put("label", labelProp);
+            JSONObject labelProp = new JSONObject();
+            labelProp.put("description", "Label");
+            labelProp.put("type", "string");
+            jsonProperties.put("label", labelProp);
+
+            JSONObject valueProp = new JSONObject();
+            valueProp.put("description", "Value");
+            valueProp.put("type", "string");
+            jsonProperties.put("value", valueProp);
+        } else {
+            JSONObject intvalueProp = new JSONObject();
+            intvalueProp.put("description", "Int Value");
+            intvalueProp.put("type", "string");
+            jsonProperties.put("intvalue", intvalueProp);
+
+            JSONObject floatvalueProp = new JSONObject();
+            floatvalueProp.put("description", "Float Value");
+            floatvalueProp.put("type", "string");
+            jsonProperties.put("floatvalue", floatvalueProp);
+
+            JSONObject stringvalueProp = new JSONObject();
+            stringvalueProp.put("description", "String Value");
+            stringvalueProp.put("type", "string");
+            jsonProperties.put("stringvalue", stringvalueProp);
+
+            JSONObject datevalueProp = new JSONObject();
+            datevalueProp.put("description", "Date Value");
+            datevalueProp.put("type", "string");
+            jsonProperties.put("datevalue", datevalueProp);
+
+        }
 
         JSONObject typeProp = new JSONObject();
         typeProp.put("description", "Type of value");
@@ -64,12 +94,7 @@ public class  CreateSchemas {
         JSONObject unitProp = new JSONObject();
         unitProp.put("description", "Unit");
         unitProp.put("type", "string");
-        jsonProperties.put("unit", labelProp);
-
-        JSONObject valueProp = new JSONObject();
-        valueProp.put("description", "Value");
-        valueProp.put("type", "string");
-        jsonProperties.put("value", valueProp);
+        jsonProperties.put("unit", unitProp);
 
         JSONObject tagProp = new JSONObject();
         tagProp.put("description", "Tag Path");

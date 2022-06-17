@@ -45,6 +45,7 @@ public class RestClient {
     private HttpResponse<String> response; // only supports string response
     private String outFile;
     private int methodType;
+    private String tenantId = "";
 
     /** Create RestClient. */
     public RestClient(String baseUri, int authType, String key, String token) {
@@ -53,6 +54,16 @@ public class RestClient {
         this.key = key;
         this.token = token;
         this.client = HttpClient.newHttpClient();
+    }
+
+    /** Create RestClient. */
+    public RestClient(String baseUri, int authType, String key, String token, String tenantId) {
+        this.baseUri = baseUri;
+        this.authType = authType;
+        this.key = key;
+        this.token = token;
+        this.client = HttpClient.newHttpClient();
+        this.tenantId = tenantId;
     }
 
     /** Invokes POST method. */

@@ -20,9 +20,9 @@ import com.ibm.mas.scada.historian.connector.utils.OffsetRecord;
 import com.ibm.mas.scada.historian.connector.configurator.Config;
 import com.ibm.mas.scada.historian.connector.configurator.TagDataCache;
 import com.ibm.mas.scada.historian.connector.provider.Provider;
-import com.ibm.mas.scada.historian.connector.provider.impl.osipi.DataProvider;
+import com.ibm.mas.scada.historian.connector.provider.impl.ignition.DataProvider;
 
-public class OsipiProvider extends Provider {
+public class IgnitionProvider extends Provider {
 
     public static final String COPYRIGHT = Copyright.COPYRIGHT;
     private static final String CLASS = Constants.LOGGER_CLASS;
@@ -31,7 +31,7 @@ public class OsipiProvider extends Provider {
     public Provider provider;
     public DataProvider dp;
 
-    public Provider OsipiProvider() {
+    public Provider IgnitionProvider() {
         return provider;
     }
 
@@ -39,14 +39,14 @@ public class OsipiProvider extends Provider {
     public void init(Config config, TagDataCache tc, OffsetRecord offsetRecord, ArrayBlockingQueue<String[]> iotDataQueue) throws Exception {
         final String METHOD = "init";
         logger = config.getLogger();
-        logger.logp(Level.FINE, CLASS, METHOD, "Initialize OsiPI provider");
+        logger.logp(Level.FINE, CLASS, METHOD, "Initialize Ignition provider");
         this.dp = new DataProvider(config, tc, offsetRecord, iotDataQueue);
     }
 
     @Override
     public long extract() throws Exception {
         final String METHOD = "extract";
-        logger.logp(Level.FINE, CLASS, METHOD, "Osipi Extract data");
+        logger.logp(Level.FINE, CLASS, METHOD, "Ignition Extract data");
         long waitTime = dp.extract();
         return waitTime;
     }
@@ -54,7 +54,7 @@ public class OsipiProvider extends Provider {
     @Override
     public long processedRecordCount() {
         final String METHOD = "processedRecordCount";
-        logger.logp(Level.FINE, CLASS, METHOD, "Osipi process records");
+        logger.logp(Level.FINE, CLASS, METHOD, "Ignition process records");
         return dp.getProcessedCount();
     }
 }

@@ -19,7 +19,7 @@
     <jacoco.unit-tests.limit.instruction-ratio>0%</jacoco.unit-tests.limit.instruction-ratio>
     <jacoco.unit-tests.limit.branch-ratio>0%</jacoco.unit-tests.limit.branch-ratio>
     <jacoco.unit-tests.limit.class-complexity>80</jacoco.unit-tests.limit.class-complexity>
-    <jacoco.unit-tests.limit.method-complexity>20</jacoco.unit-tests.limit.method-complexity>
+    <jacoco.unit-tests.limit.method-complexity>25</jacoco.unit-tests.limit.method-complexity>
   </properties>
 
   <dependencies>

@@ -12,6 +12,7 @@
         "schemaName": "BLUADMIN"
     },
     "historian": {
+        "type": "ignition",
         "dbType": "pisql",
         "jdbcUrl": "jdbc:pisql://10.208.72.125/Data Source=pidemo; Integrated Security=SSPI;",
         "schema": "piarchive",

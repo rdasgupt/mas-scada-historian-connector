@@ -21,6 +21,7 @@ import java.util.logging.FileHandler;
 import org.json.JSONObject;
 import com.ibm.mas.scada.historian.connector.utils.Constants;
 import com.ibm.mas.scada.historian.connector.utils.Copyright;
+import com.ibm.mas.scada.historian.connector.utils.ConnectorException;
 
 public class Config {
 
@@ -35,8 +36,11 @@ public class Config {
     private static String clientSite;
     private static int httpPort;
     private static int cliPort;
+    private static int scadaType = Constants.SCADA_OSIPI;
+    private static int connectorType = Constants.CONNECTOR_DEVICE;
+    private static int SAASEnv = 0;
 
-    public Config(String configPath, String dataPath, String logPath) throws IllegalArgumentException, IOException {
+    public Config(String configPath, String dataPath, String logPath) throws IllegalArgumentException, IOException, Exception {
         this.configDir = getConfigFromEnv("configDir", "MASSHC_CONFIG_DIR", configPath);
         this.dataDir = getConfigFromEnv("dataDir", "MASSHC_DATA_DIR", dataPath);
         this.logDir = getConfigFromEnv("logDir", "MASSHC_LOG_DIR", logPath);
@@ -71,6 +75,10 @@ public class Config {
         return httpPort;
     }
 
+    public int isSAASEnv() {
+        return SAASEnv;
+    }
+
     public JSONObject getConnectionConfig() {
         return this.connectionConfig;
     }
@@ -79,7 +87,19 @@ public class Config {
         return this.mappingConfig;
     }
 
-    private void process() throws IOException, IllegalArgumentException {
+    public int getScadaType() {
+        return scadaType;
+    }
+
+    public void setConnectorType(int type) {
+        connectorType = type;
+    }
+
+    public int getConnectorType() {
+        return connectorType;
+    }
+
+    private void process() throws IOException, IllegalArgumentException, Exception {
         String logFile = logDir + "/ibmScadaConnector.log";
         System.setProperty("java.util.logging.SimpleFormatter.format", "%1$tF %1$tT : %4$s : %2$s : %5$s%6$s%n");
         logger.setUseParentHandlers(false);
@@ -121,6 +141,20 @@ public class Config {
         this.clientSite = this.connectionConfig.optString("id", "NotSetInConfig");
         this.cliPort = connectionConfig.optInt("cliPort", 4550);
         this.httpPort = connectionConfig.optInt("httpPort", 5080);
+        this.SAASEnv = connectionConfig.optInt("isSAASEnv", 0);
+
+        JSONObject historianConfig = connectionConfig.getJSONObject("historian");
+        String historianType = historianConfig.optString("type", "NotDefined");
+        logger.info(String.format("SCADA Historian Type: %s", historianType));
+        if (historianType.equals("osipi")) {
+            scadaType = Constants.SCADA_OSIPI;
+        } else if (historianType.equals("ignition")) {
+            scadaType = Constants.SCADA_IGNITION;
+        } else {
+            String exMessage = String.format("Unsupported historian type %s is specified", historianType);
+            throw new ConnectorException(exMessage);
+        }
+
     }
 
     private String getConfigFromEnv(String name, String envitem, String value) throws IllegalArgumentException {

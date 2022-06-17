@@ -22,6 +22,7 @@ import com.ibm.mas.scada.historian.connector.configurator.TagmapConfig;
 import com.ibm.mas.scada.historian.connector.configurator.TagDimension;
 import com.ibm.mas.scada.historian.connector.processor.ProcessManager;
 import com.ibm.mas.scada.historian.connector.utils.Copyright;
+import com.ibm.mas.scada.historian.connector.utils.Constants;
 
 /**
  * An application to extract tag data from SCADA historian and send the data to IBM MAS Monitor.
@@ -45,14 +46,28 @@ public final class Connector {
         String dataDir;
         String logDir;
         String userHome = System.getProperty("user.home");
+        int    connectorType = Constants.CONNECTOR_DEVICE;
 
         System.out.println("IBM MAS Connector for SCADA Historian.");
 
-        if (args.length == 3) {
+        if (args.length >= 3) {
             configDir = args[0];
             dataDir = args[1];
             logDir = args[2];
+            if (args.length > 3) {
+                String cType = args[3];
+                if (cType.equals("alarm")) {
+                    connectorType = Constants.CONNECTOR_ALARM;
+                }
+            }
         } else {
+            if (args.length == 1) {
+                String cType = args[3];
+                if (cType.equals("alarm")) {
+                    connectorType = Constants.CONNECTOR_ALARM;
+                }
+            }
+
             /* Get install and data dir location from enviironment variables */
             Map <String, String> map = System.getenv();
             for ( Map.Entry <String, String> entry: map.entrySet() ) {
@@ -77,6 +92,7 @@ public final class Connector {
 
         try {
             Config config = new Config(configDir, dataDir, logDir);
+            config.setConnectorType(connectorType);
             logger = config.getLogger();
             logger.info("==== Initialize Caching =====");
             Cache cache = new Cache(config);
@@ -96,7 +112,7 @@ public final class Connector {
              * to get created, then start dimension creation thread
              */
             try {
-                Thread.sleep(30000);
+                Thread.sleep(15000);
             } catch (Exception e) { }
             logger.info("==== Add dimensions data =====");
             TagDimension tagDimension = new TagDimension(config, tc);

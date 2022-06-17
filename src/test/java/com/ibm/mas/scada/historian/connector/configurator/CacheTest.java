@@ -42,7 +42,9 @@ public class CacheTest {
         Config config = null;
         try {
             config = new Config(configDir, dataDir, logDir);
-        } catch (Exception e) { }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         assertNotNull("should not be null", config);
  
         Cache c = null;
