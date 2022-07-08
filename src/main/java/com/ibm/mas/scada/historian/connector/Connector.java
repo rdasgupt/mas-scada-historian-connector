@@ -46,6 +46,7 @@ public final class Connector {
         String dataDir;
         String logDir;
         String userHome = System.getProperty("user.home");
+        String os = System.getProperty("os.name");
         int    connectorType = Constants.CONNECTOR_DEVICE;
 
         System.out.println("IBM MAS Connector for SCADA Historian.");
@@ -69,6 +70,10 @@ public final class Connector {
             }
 
             /* Get install and data dir location from enviironment variables */
+            /* For windows use c: "
+            if (os.contains("Windows") || os.contains("windows")) {
+                userHome = "c:";
+            }
             Map <String, String> map = System.getenv();
             for ( Map.Entry <String, String> entry: map.entrySet() ) {
                 if ( entry.getKey().compareTo("IBM_SCADA_CONNECTOR_INSTALL_DIR") == 0 ) {
