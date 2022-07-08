@@ -5,72 +5,32 @@
 # -------------------------------------------------------------------------
 # Licensed Materials - Property of IBM
 # 5737-M66, 5900-AAA
-# (C) Copyright IBM Corp. 2021-2022 All Rights Reserved.
+# (C) Copyright IBM Corp. 2022 All Rights Reserved.
 # US Government Users Restricted Rights - Use, duplication, or disclosure
 # restricted by GSA ADP Schedule Contract with IBM Corp.
 # -------------------------------------------------------------------------
 #
-# Windows Powershell Script to install IBM MAS SCADA Historian Connector 
-# on Windows Servers. The install and data roots are:
+# Windows Powershell Script to configure windows tasks to start 
+# IBM MAS SCADA Historian Connector application. 
 #
-# InstallPath = "C:\ibm\masshc"
-# DataPath = "C:\ibm\masshc"
+# Prereq:
+# - Download and install MAS SCADA Historian Connector application from
+#   https://github.com/ibm-watson-iot/mas-scada-historian-connector
 #
+#   The install and data roots should be:
+#
+#   InstallPath = "C:\ibm\masshc"
+#   DataPath = "C:\ibm\masshc"
 #
 # To run this script, open a Windows command propmt with Admin privilege
 # and run the following commands:
 #
 # c:> cd c:\ibm\masshc
-# c:> powershell.exe -ExecutionPolicy Bypass .\bin\install.ps1
+# c:> powershell.exe -ExecutionPolicy Bypass .\bin\taskconfig.ps1
 #
 
 $InstallPath = "C:\IBM\masshc"
 $DataPath = "C:\IBM\masshc"
-
-# Create installation directory
-Write-Host "Creating Installation directory $InstallPath"
-if(!(Test-Path $InstallPath))
-{
-    New-Item -Path "$InstallPath" -ItemType Directory
-}
-
-# Download connector github project
-Write-Host "Downloading Connector code"
-$path = ".\connector.zip"
-if(!(Test-Path $path))
-{
-    Invoke-WebRequest -Uri "https://github.com/ibm-watson-iot/mas-scada-historian-connector/archive/master.zip" -OutFile ".\connector.zip"
-}
-
-# Download JRE
-Write-Host "Downloading JRE"
-$path = ".\jre.zip"
-if(!(Test-Path $path))
-{
-    Invoke-WebRequest -Uri "https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_windows-x64_bin.zip" -OutFile ".\jre.zip"
-}
-
-# Expand Connector code
-Write-Host "Expanding connector.zip, and copying binaries and libraries in C:\IBM\masshc"
-$path = ".\connector\mas-scada-historian-connector"
-if(!(Test-Path $path))
-{
-    Expand-Archive -Path connector.zip
-}
-$path = "$InstallPath\bin"
-if(!(Test-Path $path))
-{
-    Copy-Item -Path .\connector\mas-scada-historian-connector\bin -Recurse -Destination "$InstallPath\bin"
-    Copy-Item -Path .\connector\mas-scada-historian-connector\lib -Recurse -Destination "$InstallPath\lib"
-}
-
-# Expand jre
-Write-Host "Expanding jre.zip in $InstallPath"
-$path = "$InstallPath\jre"
-if(!(Test-Path $path))
-{
-    Expand-Archive -Path jre.zip -DestinationPath "$InstallPath"
-}
 
 # Create Data dir
 Write-Host "Creating Data directory $DataPath"

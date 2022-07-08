@@ -71,9 +71,9 @@ public final class Connector {
             /* Get install and data dir location from enviironment variables */
             Map <String, String> map = System.getenv();
             for ( Map.Entry <String, String> entry: map.entrySet() ) {
-                if ( entry.getKey().compareTo("MASSHC_INSTALL_DIR") == 0 ) {
+                if ( entry.getKey().compareTo("IBM_SCADA_CONNECTOR_INSTALL_DIR") == 0 ) {
                     installDir = entry.getValue();
-                } else if ( entry.getKey().compareTo("MASSHC_DATA_VOLUME") == 0 ) {
+                } else if ( entry.getKey().compareTo("IBM_SCADA_CONNECTOR_DATA_VOLUME") == 0 ) {
                     dataVolume = entry.getValue();
                 }
             }
