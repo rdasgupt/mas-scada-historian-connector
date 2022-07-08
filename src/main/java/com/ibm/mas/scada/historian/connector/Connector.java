@@ -49,7 +49,7 @@ public final class Connector {
         String os = System.getProperty("os.name");
         int    connectorType = Constants.CONNECTOR_DEVICE;
 
-        System.out.println("IBM MAS Connector for SCADA Historian.");
+        System.out.println("IBM MAS Connector for SCADA Historian. OS: " + os);
 
         if (args.length >= 3) {
             configDir = args[0];
