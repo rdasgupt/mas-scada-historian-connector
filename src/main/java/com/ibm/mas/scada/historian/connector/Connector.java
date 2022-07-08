@@ -70,10 +70,6 @@ public final class Connector {
             }
 
             /* Get install and data dir location from enviironment variables */
-            /* For windows use c: "
-            if (os.contains("Windows") || os.contains("windows")) {
-                userHome = "c:";
-            }
             Map <String, String> map = System.getenv();
             for ( Map.Entry <String, String> entry: map.entrySet() ) {
                 if ( entry.getKey().compareTo("IBM_SCADA_CONNECTOR_INSTALL_DIR") == 0 ) {
@@ -83,10 +79,18 @@ public final class Connector {
                 }
             }
             if ( installDir == null ) {
-                installDir = userHome + "/ibm/masshc";
+                if (os.contains("Windows") || os.contains("windows")) {
+                    installDir = "c:/ibm/masshc";
+                } else {
+                    installDir = userHome + "/ibm/masshc";
+                }
             }
             if ( dataVolume == null ) {
-                dataVolume = userHome + "/ibm/masshc";
+                if (os.contains("Windows") || os.contains("windows")) {
+                    dataVolume = "c:/ibm/masshc";
+                } else {
+                    dataVolume = userHome + "/ibm/masshc";
+                }
             }
 
             /* default config, data and log directories are in volume directory - to make it easy for docker env */
