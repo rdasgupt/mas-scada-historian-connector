@@ -15,6 +15,9 @@ set MAS_SHC_HOME="C:\IBM\masshc"
 set MAS_SHC_BIN=%DI_HOME%\bin
 set MAS_SHC_LIB=%DI_HOME%\lib
 
+set MASSHC_INSTALL_DIR=%MAS_SHC_HOME%
+set MASSHC_DATA_DIR=%MAS_SHC_HOME%
+
 set CP=%MAS_SHC_HOME%\jre\lib\*;%MAS_SHC_HOME%\lib\*
 
 %MAS_SHC_HOME%\jre\bin\java -classpath "%CP%" com.ibm.mas.scada.historian.connector.Connector
