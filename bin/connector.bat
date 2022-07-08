@@ -12,8 +12,8 @@ REM -------------------------------------------------------------------------
 REM
 
 set MAS_SHC_HOME="C:\IBM\masshc"
-set MAS_SHC_BIN=%DI_HOME%\bin
-set MAS_SHC_LIB=%DI_HOME%\lib
+set MAS_SHC_BIN=%MAS_SHC_HOME%\bin
+set MAS_SHC_LIB=%MAS_SHC_HOME%\lib
 
 set IBM_SCADA_CONNECTOR_INSTALL_DIR=%MAS_SHC_HOME%
 set IBM_SCADA_CONNECTOR_DATA_DIR=%MAS_SHC_HOME%
