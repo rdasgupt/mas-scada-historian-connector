@@ -46,9 +46,10 @@ public final class Connector {
         String dataDir;
         String logDir;
         String userHome = System.getProperty("user.home");
+        String os = System.getProperty("os.name");
         int    connectorType = Constants.CONNECTOR_DEVICE;
 
-        System.out.println("IBM MAS Connector for SCADA Historian.");
+        System.out.println("IBM MAS Connector for SCADA Historian. OS: " + os);
 
         if (args.length >= 3) {
             configDir = args[0];
@@ -78,10 +79,18 @@ public final class Connector {
                 }
             }
             if ( installDir == null ) {
-                installDir = userHome + "/ibm/masshc";
+                if (os.contains("Windows") || os.contains("windows")) {
+                    installDir = "c:/ibm/masshc";
+                } else {
+                    installDir = userHome + "/ibm/masshc";
+                }
             }
             if ( dataVolume == null ) {
-                dataVolume = userHome + "/ibm/masshc";
+                if (os.contains("Windows") || os.contains("windows")) {
+                    dataVolume = "c:/ibm/masshc";
+                } else {
+                    dataVolume = userHome + "/ibm/masshc";
+                }
             }
 
             /* default config, data and log directories are in volume directory - to make it easy for docker env */
