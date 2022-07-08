@@ -5,7 +5,7 @@
 # -------------------------------------------------------------------------
 # Licensed Materials - Property of IBM
 # 5737-M66, 5900-AAA
-# (C) Copyright IBM Corp. 2021 All Rights Reserved.
+# (C) Copyright IBM Corp. 2021-2022 All Rights Reserved.
 # US Government Users Restricted Rights - Use, duplication, or disclosure
 # restricted by GSA ADP Schedule Contract with IBM Corp.
 # -------------------------------------------------------------------------
@@ -17,6 +17,11 @@ DI_BIN="${MAS_SHC_HOME}/bin"
 export DI_BIN
 DI_LIB="${MAS_SHC_HOME}/lib"
 export DI_LIB
+
+IBM_SCADA_CONNECTOR_INSTALL_DIR="${MAS_SHC_HOME}"
+export IBM_SCADA_CONNECTOR_INSTALL_DIR
+IBM_SCADA_CONNECTOR_DATA_DIR="${MAS_SHC_HOME}"
+export IBM_SCADA_CONNECTOR_DATA_DIR
 
 CP="${MAS_SHC_HOME}/jre/lib/*:${MAS_SHC_HOME}/lib/*"
 echo ${CP}
