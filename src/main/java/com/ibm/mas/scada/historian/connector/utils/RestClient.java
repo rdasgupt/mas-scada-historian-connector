@@ -26,6 +26,8 @@ import java.util.logging.Logger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import javax.net.ssl.*;
+import java.security.SecureRandom;
 
 /**
  * RestClient class.
@@ -62,7 +64,14 @@ public class RestClient {
         this.authType = authType;
         this.key = key;
         this.token = token;
-        this.client = HttpClient.newHttpClient();
+        try {
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null, trustAllCerts, new SecureRandom());
+            // this.client = HttpClient.newHttpClient();
+            this.client = HttpClient.newBuilder()
+                .sslContext(sslContext)
+                .build();
+        } catch( Exception e) {}
         this.tenantId = tenantId;
     }
 
@@ -277,5 +286,19 @@ public class RestClient {
         byteArrays.add(("--" + boundary + "--").getBytes(StandardCharsets.UTF_8));
         return BodyPublishers.ofByteArrays(byteArrays);
     }
-}
 
+    private static TrustManager[] trustAllCerts = new TrustManager[]{
+        new X509TrustManager() {
+            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+            public void checkClientTrusted(
+                java.security.cert.X509Certificate[] certs, String authType) {
+            }
+            public void checkServerTrusted(
+                java.security.cert.X509Certificate[] certs, String authType) {
+            }
+        }
+    };
+
+}

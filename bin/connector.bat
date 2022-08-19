@@ -20,5 +20,5 @@ set IBM_SCADA_CONNECTOR_DATA_DIR=%MAS_SHC_HOME%
 
 set CP=%MAS_SHC_HOME%\jre\lib\*;%MAS_SHC_HOME%\lib\*
 
-%MAS_SHC_HOME%\jre\bin\java -classpath "%CP%" com.ibm.mas.scada.historian.connector.Connector
+%MAS_SHC_HOME%\jre\bin\java -Djdk.internal.httpclient.disableHostnameVerification=true -classpath "%CP%" com.ibm.mas.scada.historian.connector.Connector
 
