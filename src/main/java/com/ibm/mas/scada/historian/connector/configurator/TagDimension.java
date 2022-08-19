@@ -74,12 +74,12 @@ public class TagDimension {
         this.tenantId = iotp.getString("tenantId");
         if (config.isSAASEnv() == 0) {
             if (apiVersion == 2) {
-                this.restClient = new RestClient(baseUrl, Constants.AUTH_HEADER, asKey, asToken, tenantId);
+                this.restClient = new RestClient(baseUrl, Constants.AUTH_HEADER, asKey, asToken, tenantId, 1);
             } else {
-                this.restClient = new RestClient(baseUrl, Constants.AUTH_HEADER, asKey, asToken);
+                this.restClient = new RestClient(baseUrl, Constants.AUTH_HEADER, asKey, asToken, 1);
             }
         } else {
-            this.restClient = new RestClient(baseUrl, Constants.AUTH_HEADER, key, token);
+            this.restClient = new RestClient(baseUrl, Constants.AUTH_HEADER, key, token, 0);
         }
     }
 

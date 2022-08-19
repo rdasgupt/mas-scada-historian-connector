@@ -72,7 +72,7 @@ public class TagConfigurator {
         int registeredBefore = 0;
 
         try {
-            RestClient restClient = new RestClient(baseUrl, Constants.AUTH_BASIC, key, token);
+            RestClient restClient = new RestClient(baseUrl, Constants.AUTH_BASIC, key, token, 0);
 
             /* For each tagType in tagTypes list:
              *  - Create interfaces and device type
@@ -206,7 +206,7 @@ public class TagConfigurator {
         int totalRemoved = 0;
 
         try {
-            RestClient restClient = new RestClient(baseUrl, Constants.AUTH_BASIC, key, token);
+            RestClient restClient = new RestClient(baseUrl, Constants.AUTH_BASIC, key, token, 0);
 
             /* Remove all devices of the specified type.
              * If type is null, remove all devices.

@@ -50,28 +50,41 @@ public class RestClient {
     private String tenantId = "";
 
     /** Create RestClient. */
-    public RestClient(String baseUri, int authType, String key, String token) {
+    public RestClient(String baseUri, int authType, String key, String token, int noVerify) {
         this.baseUri = baseUri;
         this.authType = authType;
         this.key = key;
         this.token = token;
-        this.client = HttpClient.newHttpClient();
+        if (noVerify == 1) {
+            try {
+                SSLContext sslContext = SSLContext.getInstance("TLS");
+                sslContext.init(null, trustAllCerts, new SecureRandom());
+                this.client = HttpClient.newBuilder()
+                    .sslContext(sslContext)
+                    .build();
+            } catch( Exception e) {}
+        } else {
+            this.client = HttpClient.newHttpClient();
+        }
     }
 
     /** Create RestClient. */
-    public RestClient(String baseUri, int authType, String key, String token, String tenantId) {
+    public RestClient(String baseUri, int authType, String key, String token, String tenantId, int noVerify) {
         this.baseUri = baseUri;
         this.authType = authType;
         this.key = key;
         this.token = token;
-        try {
-            SSLContext sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, trustAllCerts, new SecureRandom());
-            // this.client = HttpClient.newHttpClient();
-            this.client = HttpClient.newBuilder()
-                .sslContext(sslContext)
-                .build();
-        } catch( Exception e) {}
+        if (noVerify == 1) {
+            try {
+                SSLContext sslContext = SSLContext.getInstance("TLS");
+                sslContext.init(null, trustAllCerts, new SecureRandom());
+                this.client = HttpClient.newBuilder()
+                    .sslContext(sslContext)
+                    .build();
+            } catch( Exception e) {}
+        } else {
+            this.client = HttpClient.newHttpClient();
+        }
         this.tenantId = tenantId;
     }
 

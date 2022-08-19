@@ -57,7 +57,7 @@ public class RestClientTest {
         String method;
         String body;
 
-        RestClient client = new RestClient(baseUri, authType, key, token);
+        RestClient client = new RestClient(baseUri, authType, key, token, 0);
         assertNotNull("New RestClient should not be null", client);
 
         /* Valid get. */
@@ -105,7 +105,7 @@ public class RestClientTest {
         String method;
         String body;
 
-        RestClient client = new RestClient(baseUri, authType, key, token);
+        RestClient client = new RestClient(baseUri, authType, key, token, 0);
         assertNotNull("New RestClient should not be null", client);
 
         /* Valid get. */
@@ -153,7 +153,7 @@ public class RestClientTest {
         String method;
         String body;
 
-        RestClient client = new RestClient(baseUri, authType, key, token);
+        RestClient client = new RestClient(baseUri, authType, key, token, 0);
         assertNotNull("New RestClient should not be null", client);
 
         /* Valid get. */
@@ -201,7 +201,7 @@ public class RestClientTest {
         String method;
         String body;
 
-        RestClient client = new RestClient(baseUri, authType, key, token);
+        RestClient client = new RestClient(baseUri, authType, key, token, 0);
         assertNotNull("New RestClient should not be null", client);
 
         /* Valid get. */
@@ -235,7 +235,7 @@ public class RestClientTest {
         String method;
         String body;
 
-        RestClient client = new RestClient(baseUri, authType, key, token);
+        RestClient client = new RestClient(baseUri, authType, key, token, 0);
         assertNotNull("New RestClient should not be null", client);
 
         /* Valid post. */
