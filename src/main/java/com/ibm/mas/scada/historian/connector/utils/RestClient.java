@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.net.Socket;
 import javax.net.ssl.*;
 import java.security.SecureRandom;
 
@@ -48,6 +49,7 @@ public class RestClient {
     private String outFile;
     private int methodType;
     private String tenantId = "";
+    private String emailId = "";
 
     /** Create RestClient. */
     public RestClient(String baseUri, int authType, String key, String token, int noVerify) {
@@ -69,7 +71,7 @@ public class RestClient {
     }
 
     /** Create RestClient. */
-    public RestClient(String baseUri, int authType, String key, String token, String tenantId, int noVerify) {
+    public RestClient(String baseUri, int authType, String key, String token, String emainId, String tenantId, int noVerify) {
         this.baseUri = baseUri;
         this.authType = authType;
         this.key = key;
@@ -86,6 +88,7 @@ public class RestClient {
             this.client = HttpClient.newHttpClient();
         }
         this.tenantId = tenantId;
+        this.emailId = emailId;
     }
 
     /** Invokes POST method. */
@@ -109,6 +112,8 @@ public class RestClient {
                 .header("Content-Type", "application/json")
                 .header("x-api-key", key)
                 .header("x-api-token", token)
+                .header("tenantId", tenantId)
+                .header("mam_user_email", emailId)
                 .POST(HttpRequest.BodyPublishers.ofString(body))
                 .build();
         } else {
@@ -306,10 +311,22 @@ public class RestClient {
                 return null;
             }
             public void checkClientTrusted(
-                java.security.cert.X509Certificate[] certs, String authType) {
+                final java.security.cert.X509Certificate[] certs, String authType) {
             }
             public void checkServerTrusted(
                 java.security.cert.X509Certificate[] certs, String authType) {
+            }
+            public void checkClientTrusted(
+                final java.security.cert.X509Certificate[] a_certificates, final String a_auth_type, final Socket a_socket) {
+            }
+            public void checkServerTrusted(
+                final java.security.cert.X509Certificate[] a_certificates, final String a_auth_type, final Socket a_socket) {
+            }
+            public void checkClientTrusted(
+                final java.security.cert.X509Certificate[] a_certificates, final String a_auth_type, final SSLEngine a_engine) {
+            }
+            public void checkServerTrusted(
+                final java.security.cert.X509Certificate[] a_certificates, final String a_auth_type, final SSLEngine a_engine) {
             }
         }
     };

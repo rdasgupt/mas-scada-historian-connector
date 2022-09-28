@@ -2,7 +2,7 @@
  * IBM Confidential
  * OCO Source Materials
  * 5725-S86, 5900-A0N, 5737-M66, 5900-AAA
- * (C) Copyright IBM Corp. 2021
+ * (C) Copyright IBM Corp. 2022
  * The source code for this program is not published or otherwise divested of
  * its trade secrets, irrespective of what has been deposited with the U.S.
  * Copyright Office.
@@ -67,14 +67,15 @@ public class TagDimension {
         this.schemaName = iotp.getString("schemaName");
         String key = iotp.getString("apiKey");
         String token = iotp.getString("apiToken");
-        String asKey = iotp.getString("asKey");
-        String asToken = iotp.getString("asToken");
+        String asKey = iotp.getString("X_API_KEY");
+        String asToken = iotp.getString("X_API_TOKEN");
+        String asEmail = iotp.getString("MAM_USER_EMAIL");
         this.apiVersion = iotp.optInt("asAPIVersion", 2);
         this.baseUrl = "https://" + iotp.getString("asHost");
-        this.tenantId = iotp.getString("tenantId");
+        this.tenantId = iotp.getString("TENANT_ID");
         if (config.isSAASEnv() == 0) {
             if (apiVersion == 2) {
-                this.restClient = new RestClient(baseUrl, Constants.AUTH_HEADER, asKey, asToken, tenantId, 1);
+                this.restClient = new RestClient(baseUrl, Constants.AUTH_HEADER, asKey, asToken, asEmail, tenantId, 1);
             } else {
                 this.restClient = new RestClient(baseUrl, Constants.AUTH_HEADER, asKey, asToken, 1);
             }
@@ -108,21 +109,23 @@ public class TagDimension {
             JSONObject deviceType = deviceTypes.getJSONObject(i);
             String entityTypeName = deviceType.getString("type");
             String etypeAPI;
+
             if (apiVersion == 2) {
-                etypeAPI = "/api/v2/core/deviceTypes";
+                etypeAPI = "/api/v2/deviceTypes";
             } else {
                 etypeAPI = "/api/meta/v1/" + tenantId + "/entityType";
-            }
-            try {
-                restClient.get(etypeAPI + "/" + entityTypeName);
-                logger.info(String.format("EntityType POST Status Code: %d", restClient.getResponseCode()));
-                if (restClient.getResponseCode() != 200) {
+ 
+                try {
+                    restClient.get(etypeAPI + "/" + entityTypeName);
+                    logger.info(String.format("EntityType GET Status Code: %d", restClient.getResponseCode()));
+                    if (restClient.getResponseCode() != 200) {
+                        entityExists = false;
+                    }
+                } catch(Exception ex) {
+                    logger.info("Get EntityType " + entityTypeName + " failed. Exception: " + ex.getMessage());
+                    logger.log(Level.FINE, ex.getMessage(), ex);
                     entityExists = false;
                 }
-            } catch(Exception ex) {
-                logger.info("Get EntityType " + entityTypeName + " failed. Exception: " + ex.getMessage());
-                logger.log(Level.FINE, ex.getMessage(), ex);
-                entityExists = false;
             }
 
             if (!entityExists && createEntityType) {
@@ -131,14 +134,17 @@ public class TagDimension {
                 String dimensionTableName = metricTableName + "_CTG";
                 JSONArray entityObj = new JSONArray();
                 JSONObject entityTypeObj = new JSONObject();
-                entityTypeObj.put("name", entityTypeName);
-                entityTypeObj.put("description", entityTypeName);
-                entityTypeObj.put("metricTableName", metricTableName);
-                entityTypeObj.put("dimensionTableName", dimensionTableName);
-                entityTypeObj.put("metricTimestampColumn", "EVT_TIMESTAMP");
-                entityTypeObj.put("schemaName", schemaName);
+                JSONObject eventObj = new JSONObject();
                 JSONArray dataItemDtoArray = new JSONArray();
+                JSONArray evtDtoArray = new JSONArray();
                 if (scadaType == Constants.SCADA_OSIPI) {
+                    entityTypeObj.put("name", entityTypeName);
+                    entityTypeObj.put("description", entityTypeName);
+                    entityTypeObj.put("metricTableName", metricTableName);
+                    entityTypeObj.put("dimensionTableName", dimensionTableName);
+                    entityTypeObj.put("metricTimestampColumn", "EVT_TIMESTAMP");
+                    entityTypeObj.put("schemaName", schemaName);
+
                     dataItemDtoArray.put(createDataDtoObject("evt_timestamp", "METRIC", "EVT_TIMESTAMP", "TIMESTAMP"));
                     dataItemDtoArray.put(createDataDtoObject("entity_id", "METRIC", "DEVICEID", "LITERAL"));
                     dataItemDtoArray.put(createDataDtoObject("name", "METRIC", "NAME", "LITERAL"));
@@ -153,26 +159,34 @@ public class TagDimension {
                     dataItemDtoArray.put(createDataDtoObject("TAGPATH", "DIMENSION", "TAGPATH", "LITERAL"));
                     dataItemDtoArray.put(createDataDtoObject("SITE", "DIMENSION", "SITE", "LITERAL"));
                     dataItemDtoArray.put(createDataDtoObject("CATEGORIES", "DIMENSION", "CATEGORIES", "LITERAL"));
+                    entityTypeObj.put("dataItemDto", dataItemDtoArray);
+                    entityObj.put(entityTypeObj);
                 } else {
-                    dataItemDtoArray.put(createDataDtoObject("evt_timestamp", "METRIC", "EVT_TIMESTAMP", "TIMESTAMP"));
-                    dataItemDtoArray.put(createDataDtoObject("entity_id", "METRIC", "DEVICEID", "LITERAL"));
-                    dataItemDtoArray.put(createDataDtoObject("name", "METRIC", "NAME", "LITERAL"));
-                    dataItemDtoArray.put(createDataDtoObject("intvalue", "METRIC", "INTVALUE", "LITERAL"));
-                    dataItemDtoArray.put(createDataDtoObject("floatvalue", "METRIC", "FLOATVALUE", "LITERAL"));
-                    dataItemDtoArray.put(createDataDtoObject("stringvalue", "METRIC", "STRINGVALUE", "LITERAL"));
-                    dataItemDtoArray.put(createDataDtoObject("datevalue", "METRIC", "DATEVALUE", "LITERAL"));
-                    dataItemDtoArray.put(createDataDtoObject("type", "METRIC", "TYPE", "LITERAL"));
-                    dataItemDtoArray.put(createDataDtoObject("unit", "METRIC", "UNIT", "LITERAL"));
-                    dataItemDtoArray.put(createDataDtoObject("decimalAccuracy", "METRIC", "DECIMALACCURACY", "LITERAL"));
-                    dataItemDtoArray.put(createDataDtoObject("evt_name", "METRIC", "EVT_NAME", "LITERAL"));
-                    dataItemDtoArray.put(createDataDtoObject("tag", "METRIC", "TAG", "LITERAL"));
-                    dataItemDtoArray.put(createDataDtoObject("TAGID",  "DIMENSION", "TAGID", "LITERAL"));
-                    dataItemDtoArray.put(createDataDtoObject("TAGPATH", "DIMENSION", "TAGPATH", "LITERAL"));
-                    dataItemDtoArray.put(createDataDtoObject("DATATYPE", "DIMENSION", "DATATYPE", "LITERAL"));
-                    dataItemDtoArray.put(createDataDtoObject("SITE", "DIMENSION", "SITE", "LITERAL"));
+                    entityTypeObj.put("name", entityTypeName);
+                    entityTypeObj.put("description", entityTypeName);
+                    dataItemDtoArray.put(createDataDtoObjectV2("evt_timestamp", "EventA", "TIMESTAMP", "METRIC"));
+                    dataItemDtoArray.put(createDataDtoObjectV2("intvalue", "EventA", "LITERAL", "METRIC"));
+                    dataItemDtoArray.put(createDataDtoObjectV2("floatvalue", "EventA", "LITERAL", "METRIC"));
+                    dataItemDtoArray.put(createDataDtoObjectV2("stringvalue", "EventA", "LITERAL", "METRIC"));
+                    dataItemDtoArray.put(createDataDtoObjectV2("datevalue", "EventA", "LITERAL", "METRIC"));
+                    dataItemDtoArray.put(createDataDtoObjectV2("type", "EventA", "LITERAL", "METRIC"));
+                    dataItemDtoArray.put(createDataDtoObjectV2("unit", "EventA", "LITERAL", "METRIC"));
+                    dataItemDtoArray.put(createDataDtoObjectV2("decimalAccuracy", "EventA", "LITERAL", "METRIC"));
+                    dataItemDtoArray.put(createDataDtoObjectV2("tag", "EventA", "LITERAL", "METRIC"));
+                    dataItemDtoArray.put(createDataDtoObjectV2("evt_name", "EventA", "LITERAL", "METRIC"));
+
+                    dataItemDtoArray.put(createDataDtoObjectV2("TAGID", "EventA", "LITERAL", "DIMENSION"));
+                    dataItemDtoArray.put(createDataDtoObjectV2("TAGPATH", "EventA", "LITERAL", "DIMENSION"));
+                    dataItemDtoArray.put(createDataDtoObjectV2("DATATYPE", "EventA", "LITERAL", "DIMENSION"));
+                    dataItemDtoArray.put(createDataDtoObjectV2("SITE", "EventA", "LITERAL", "DIMENSION"));
+                    entityTypeObj.put("dataItemDto", dataItemDtoArray);
+                    entityObj.put(entityTypeObj);
+
+                    evtDtoArray.put(createEventDtoObjectV2("EventA", "evt_timestamp"));
+                    eventObj.put("eventDto", evtDtoArray);
+                    entityObj.put(eventObj);
                 }
-                entityTypeObj.put("dataItemDto", dataItemDtoArray);
-                entityObj.put(entityTypeObj);
+
                 try {
                     restClient.post(etypeAPI, entityTypeObj.toString());
                     logger.info(String.format("EntityType POST Status Code: %d", restClient.getResponseCode()));
@@ -296,6 +310,23 @@ public class TagDimension {
         dtoObj.put("columnName", colName);
         dtoObj.put("columnType", colType);
         return dtoObj;
+    }
+
+    private static JSONObject createDataDtoObjectV2(String dtoName, String evtName, String colType, String dtoType) {
+        JSONObject dtoObj = new JSONObject();
+        dtoObj.put("name", dtoName);
+        dtoObj.put("eventName", evtName);
+        dtoObj.put("columnType", colType);
+        dtoObj.put("type", dtoType);
+        dtoObj.put("transient", false);
+        return dtoObj;
+    }
+
+    private static JSONObject createEventDtoObjectV2(String evtName, String evtTS) {
+        JSONObject evtObj = new JSONObject();
+        evtObj.put("name", evtName);
+        evtObj.put("metricTimestampColumn", evtTS);
+        return evtObj;
     }
 
     /* Thread to create dimensions */
