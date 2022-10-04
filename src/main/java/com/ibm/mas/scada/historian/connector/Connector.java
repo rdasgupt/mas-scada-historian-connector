@@ -102,6 +102,7 @@ public final class Connector {
         try {
             Config config = new Config(configDir, dataDir, logDir);
             config.setConnectorType(connectorType);
+            int apiVersion = config.getApiVersion();
             logger = config.getLogger();
             logger.info("==== Initialize Caching =====");
             Cache cache = new Cache(config);
@@ -110,22 +111,35 @@ public final class Connector {
             tagBuilder.build();
             TagDataCache tc = tagBuilder.getTagDataCache();
             TagmapConfig tmc = tagBuilder.getTagmapConfig();
-            logger.info("==== Configure types and devices in IoT =====");
-            TagConfigurator tagConfigurator = new TagConfigurator(config, tc, tmc);
-            tagConfigurator.configure();
+ 
+            if (apiVersion == 1) {
+                logger.info("==== Configure types and devices in IoT =====");
+                TagConfigurator tagConfigurator = new TagConfigurator(config, tc, tmc);
+                tagConfigurator.configure();
+            } else {
+                logger.info("==== Configure v2 device types and devices =====");
+                TagDimension tagDimension = new TagDimension(config, tc);
+                tagDimension.startDimensionProcess();
+                try {
+                    Thread.sleep(5000);
+                } catch (Exception e) { }
+            }
+
             logger.info("==== Extract and process Historian data =====");
             ProcessManager pm = new ProcessManager(config, cache, tc);
             pm.processData();
 
-            /* wait for some time for events to flow in database and entity type to 
+            /* If apiVersion is 1, then wait for some time for events to flow in database and entity type to 
              * to get created, then start dimension creation thread
              */
-            try {
-                Thread.sleep(15000);
-            } catch (Exception e) { }
-            logger.info("==== Add dimensions data =====");
-            TagDimension tagDimension = new TagDimension(config, tc);
-            tagDimension.startDimensionProcess();
+            if (apiVersion == 1) {
+                try {
+                    Thread.sleep(5000);
+                } catch (Exception e) { }
+                logger.info("==== Add dimensions data =====");
+                TagDimension tagDimension = new TagDimension(config, tc);
+                tagDimension.startDimensionProcess();
+            }
 
             /* monitor data processing thread */
             while (true) {

@@ -39,6 +39,7 @@ public class Config {
     private static int scadaType = Constants.SCADA_OSIPI;
     private static int connectorType = Constants.CONNECTOR_DEVICE;
     private static int SAASEnv = 0;
+    private static int apiVersion = 1;
 
     public Config(String configPath, String dataPath, String logPath) throws IllegalArgumentException, IOException, Exception {
         this.configDir = getConfigFromEnv("configDir", "MASSHC_CONFIG_DIR", configPath);
@@ -87,6 +88,10 @@ public class Config {
         return this.mappingConfig;
     }
 
+    public int getApiVersion() {
+        return this.apiVersion;
+    }
+
     public int getScadaType() {
         return scadaType;
     }
@@ -133,6 +138,7 @@ public class Config {
                 throw new IOException ("Mapping file is missing or empty.");
             } 
             this.mappingConfig = new JSONObject(fileContent);
+            this.apiVersion = mappingConfig.optInt("apiVersion", 1);
         } catch (IOException ioe) {
             logger.info("Invalid configuration. Exception: " + ioe.getMessage());
             throw ioe;

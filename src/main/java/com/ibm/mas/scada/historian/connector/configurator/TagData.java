@@ -24,6 +24,7 @@ public class TagData implements Serializable {
     private String     tagPath;
     private String     deviceId;
     private String     deviceType;
+    private String     deviceTypeUUID;
     private String     token;
     private String     metrics;
     private String     dimensions;
@@ -40,6 +41,7 @@ public class TagData implements Serializable {
         this.tagPath = tagpath;
         this.deviceId = deviceId;
         this.deviceType = deviceType;
+        this.deviceTypeUUID = "";
     }
 
     public void setServiceName(String serviceName) {
@@ -72,6 +74,14 @@ public class TagData implements Serializable {
 
     public void setDeviceType(String deviceType) {
         this.deviceType = deviceType;
+    }
+
+    public String getDeviceTypeUUID() {
+        return this.deviceTypeUUID;
+    }
+
+    public void setDeviceTypeUUID(String uuid) {
+        this.deviceTypeUUID = uuid;
     }
 
     public int getDeviceStatus() {

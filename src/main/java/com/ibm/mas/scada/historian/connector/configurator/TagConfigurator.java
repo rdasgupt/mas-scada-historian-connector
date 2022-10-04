@@ -44,6 +44,7 @@ public class TagConfigurator {
     private static Set<String> tagList;
     private static int SAASEnv;
     private static int scadaType;
+    private static int apiVersion = 1;
 
     public TagConfigurator (Config config, TagDataCache tc, TagmapConfig tmc) {
         super();
@@ -59,6 +60,7 @@ public class TagConfigurator {
         this.orgId = iotpConfig.getString("orgId");
         this.key = iotpConfig.getString("apiKey");
         this.token = iotpConfig.getString("apiToken");
+        this.apiVersion = config.getApiVersion();
         this.baseUrl = iotpConfig.getString("url") + "/";
         this.url = iotpConfig.getString("url");
         this.tc = tc;
@@ -71,8 +73,13 @@ public class TagConfigurator {
         int registeredNow = 0;
         int registeredBefore = 0;
 
+        if (apiVersion == 2) {
+            logger.info("Use Monitor V2 API to create device type");
+            return;
+        }
+ 
         try {
-            RestClient restClient = new RestClient(baseUrl, Constants.AUTH_BASIC, key, token, 0);
+            RestClient restClient = new RestClient(baseUrl, Constants.AUTH_BASIC, key, token, 1);
 
             /* For each tagType in tagTypes list:
              *  - Create interfaces and device type
@@ -206,7 +213,7 @@ public class TagConfigurator {
         int totalRemoved = 0;
 
         try {
-            RestClient restClient = new RestClient(baseUrl, Constants.AUTH_BASIC, key, token, 0);
+            RestClient restClient = new RestClient(baseUrl, Constants.AUTH_BASIC, key, token, 1);
 
             /* Remove all devices of the specified type.
              * If type is null, remove all devices.

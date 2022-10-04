@@ -64,6 +64,7 @@ public class RestClient {
                 this.client = HttpClient.newBuilder()
                     .sslContext(sslContext)
                     .build();
+                logger.info("REST Client trust all certs");
             } catch( Exception e) {}
         } else {
             this.client = HttpClient.newHttpClient();
@@ -71,7 +72,7 @@ public class RestClient {
     }
 
     /** Create RestClient. */
-    public RestClient(String baseUri, int authType, String key, String token, String emainId, String tenantId, int noVerify) {
+    public RestClient(String baseUri, int authType, String key, String token, String eId, String tId, int noVerify) {
         this.baseUri = baseUri;
         this.authType = authType;
         this.key = key;
@@ -87,8 +88,8 @@ public class RestClient {
         } else {
             this.client = HttpClient.newHttpClient();
         }
-        this.tenantId = tenantId;
-        this.emailId = emailId;
+        this.tenantId = tId;
+        this.emailId = eId;
     }
 
     /** Invokes POST method. */
@@ -110,8 +111,8 @@ public class RestClient {
             request = HttpRequest.newBuilder()
                 .uri(URI.create(postEndpoint))
                 .header("Content-Type", "application/json")
-                .header("x-api-key", key)
-                .header("x-api-token", token)
+                .header("X-api-key", key)
+                .header("X-api-token", token)
                 .header("tenantId", tenantId)
                 .header("mam_user_email", emailId)
                 .POST(HttpRequest.BodyPublishers.ofString(body))

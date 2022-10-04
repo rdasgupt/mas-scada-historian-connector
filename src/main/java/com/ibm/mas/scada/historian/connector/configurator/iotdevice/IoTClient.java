@@ -47,7 +47,7 @@ public class IoTClient {
             this.baseUrl = url;
         }
         this.authHeader = "Basic " + Base64.getEncoder().encodeToString((key + ":" + token).getBytes(StandardCharsets.UTF_8));
-        this.restClient = new RestClient(baseUrl, Constants.AUTH_BASIC, key, token, 0);
+        this.restClient = new RestClient(baseUrl, Constants.AUTH_BASIC, key, token, 1);
         this.deviceToken = token;
         this.objectMapper = new ObjectMapper();
         AnnotationIntrospector introspector = new JacksonAnnotationIntrospector();
