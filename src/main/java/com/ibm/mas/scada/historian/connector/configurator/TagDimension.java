@@ -193,7 +193,7 @@ public class TagDimension {
                     if (httpCode != 200) {
                         entityExists = false;
                         if (httpCode == 400) {
-                            logger.info(String.format("EntityTypeObj: \n%s", entityTypeObj.toString()));
+                            logger.fine(String.format("EntityTypeObj: \n%s", entityTypeObj.toString()));
                         }
                     } else {
                         JSONObject retObject = new JSONObject(restClient.getResponseBody());
@@ -343,7 +343,7 @@ public class TagDimension {
             logger.info(String.format("EntityType POST Status Code: %d", httpCode));
 
             if (httpCode != 200) {
-                logger.info(String.format("EntityTypeObj: \n%s", entityTypeObj.toString()));
+                logger.fine(String.format("EntityTypeObj: \n%s", entityTypeObj.toString()));
             } else {
                 JSONObject retObject = new JSONObject(restClient.getResponseBody());
                 uuid = retObject.getString("uuid");
@@ -428,7 +428,7 @@ public class TagDimension {
                 deviceObj.put(devItem);
             
                 try {
-                    logger.info("V2 Device Object: " + deviceObj.toString());
+                    logger.fine("V2 Device Object: " + deviceObj.toString());
                     restClient.post(deviceAPI, deviceObj.toString());
                     logger.info(String.format("V2 Device create Status Code: %d", restClient.getResponseCode()));
                     td.setDeviceStatus(1);
@@ -463,10 +463,10 @@ public class TagDimension {
                     done = true;
                     if (batchCount == 1) break;
                     try {
-                        logger.info("DIMENSION Object: " + dimensionObj.toString());
+                        logger.fine("DIMENSION Object: " + dimensionObj.toString());
                         restClient.post(dimAPI, dimensionObj.toString());
                         logger.info(String.format("Dimension POST Status Code: %d", restClient.getResponseCode()));
-                        logger.info(String.format("Dimension POST Status Body: %s", restClient.getResponseBody()));
+                        logger.fine(String.format("Dimension POST Status Body: %s", restClient.getResponseBody()));
                     } catch(Exception ex) {
                         logger.info("Exception message: " + ex.getMessage());
                         logger.log(Level.FINE, ex.getMessage(), ex);

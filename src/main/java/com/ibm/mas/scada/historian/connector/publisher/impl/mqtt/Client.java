@@ -14,6 +14,9 @@ import org.json.JSONObject;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.util.Properties;
+import java.net.Socket;
+import javax.net.ssl.*;
+import java.security.SecureRandom;
 
 import org.eclipse.paho.mqttv5.client.IMqttToken;
 import org.eclipse.paho.mqttv5.client.IMqttToken;
@@ -26,7 +29,6 @@ import org.eclipse.paho.mqttv5.common.MqttException;
 import org.eclipse.paho.mqttv5.common.MqttMessage;
 import org.eclipse.paho.mqttv5.common.MqttSubscription;
 import org.eclipse.paho.mqttv5.common.packet.MqttProperties;
-
 import com.ibm.mas.scada.historian.connector.configurator.Config;
 import com.ibm.mas.scada.historian.connector.utils.Copyright;
 import com.ibm.mas.scada.historian.connector.utils.Constants;
@@ -57,6 +59,7 @@ public class Client implements MqttCallback {
     private static int iotClientType;
     private static int mqttClientType;
     private static boolean isConnected;
+    private static int trustServerCert = 1;
 
     public Client() {
         super();
@@ -75,6 +78,7 @@ public class Client implements MqttCallback {
         this.orgId = iotpConfig.getString("orgId");
         String host = iotpConfig.getString("host");
         String port = String.valueOf(iotpConfig.getInt("port"));
+        this.trustServerCert = iotpConfig.getInt("trustServerCert");
         this.trustStore = iotpConfig.optString("trustStore", "");
         this.trustStorePwd = iotpConfig.optString("trustStorePassword", "");
         this.mqttHost = "ssl://" + host + ":" + port;
@@ -85,19 +89,26 @@ public class Client implements MqttCallback {
 
     public void connect(String type, String id) throws MqttException {
         try {
-            logger.info("MQTT client host: " + mqttHost);
+            logger.fine("MQTT client host: " + mqttHost);
             isConnected = false;
             MqttSubscription [] subs = new MqttSubscription[1];
             subs[0] = new MqttSubscription("iot-2/type/+/id/+/err/data", 2);
             opt = new MqttConnectionOptions();
             opt.setCleanStart(true);
             opt.setPassword(token.getBytes());
-            if (trustStore != null && !trustStore.equals("")) {
+            if (trustServerCert == 1) {
+                SSLContext sc = SSLContext.getInstance("TLS"); 
+                sc.init(null, trustAllCerts, new java.security.SecureRandom()); 
+                SSLSocketFactory socketFactory = sc.getSocketFactory ();
+                opt.setSocketFactory(socketFactory);
+                logger.fine("MQTT Trust server cert");
+            } else if (trustStore != null && !trustStore.equals("")) {
                 Properties sslClientProps = new Properties();
                 sslClientProps.setProperty("com.ibm.ssl.trustStore", trustStore);
                 sslClientProps.setProperty("com.ibm.ssl.trustStorePassword", trustStorePwd);
                 sslClientProps.setProperty("com.ibm.ssl.trustStoreType", "JKS");
                 opt.setSSLProperties(sslClientProps);
+                logger.fine("MQTT Set trustStore");
             }
 
             if (iotClientType == Constants.DEVICE_CLIENT) {
@@ -112,7 +123,7 @@ public class Client implements MqttCallback {
                 opt.setUserName(key);
             }
 
-            logger.info("MQTT client id: " + mqttClientId);
+            logger.info("Publish MQTT client id: " + mqttClientId);
 
             client = new Client();
 
@@ -154,7 +165,7 @@ public class Client implements MqttCallback {
         if (topicString == null) {
             topicString = "iot-2/evt/" + eventName + "/fmt/json";
         }
-        logger.info("MQTT Publish: " + topicString + " | " + payload);
+        logger.fine("MQTT Publish: " + topicString + " | " + payload);
         if (mqttClientType == Constants.MQTT_SYNC) {
             connSync.publish(topicString.trim(), msg);
         } else {
@@ -205,5 +216,31 @@ public class Client implements MqttCallback {
 
     public void authPacketArrived(int reasonCode, MqttProperties properties) {
     }
+
+    private static TrustManager[] trustAllCerts = new TrustManager[]{
+        new X509TrustManager() {
+            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+            public void checkClientTrusted(
+                final java.security.cert.X509Certificate[] certs, String authType) {
+            }
+            public void checkServerTrusted(
+                java.security.cert.X509Certificate[] certs, String authType) {
+            }
+            public void checkClientTrusted(
+                final java.security.cert.X509Certificate[] a_certificates, final String a_auth_type, final Socket a_socket) {
+            }
+            public void checkServerTrusted(
+                final java.security.cert.X509Certificate[] a_certificates, final String a_auth_type, final Socket a_socket) {
+            }
+            public void checkClientTrusted(
+                final java.security.cert.X509Certificate[] a_certificates, final String a_auth_type, final SSLEngine a_engine) {
+            }
+            public void checkServerTrusted(
+                final java.security.cert.X509Certificate[] a_certificates, final String a_auth_type, final SSLEngine a_engine) {
+            }
+        }
+    };
 }
 

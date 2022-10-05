@@ -264,7 +264,7 @@ public class DataProvider {
             String [] iotData = new String[Constants.IOTP_IGNITION_DEVICE_TOTAL];
             iotData[Constants.IOTP_IGNITION_DEVICE_DEVICETYPE] = td.getDeviceType();
             iotData[Constants.IOTP_IGNITION_DEVICE_DEVICEID] = td.getDeviceId();
-            iotData[Constants.IOTP_IGNITION_DEVICE_EVT_NAME] = "scadaevent";
+            iotData[Constants.IOTP_IGNITION_DEVICE_EVT_NAME] = "EventA";
             // iotData[Constants.IOTP_IGNITION_DEVICE_EVT_TIMESTAMP] = evtts.replace(' ', 'T') + "Z";
             iotData[Constants.IOTP_IGNITION_DEVICE_EVT_TIMESTAMP] = evtts;
             iotData[Constants.IOTP_IGNITION_DEVICE_INTVALUE] = rs.getString("intvalue");
