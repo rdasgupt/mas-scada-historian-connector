@@ -85,11 +85,11 @@ public class Client implements MqttCallback {
         this.iotClientType= connectionConfig.optInt("iotClientType", Constants.DEVICE_CLIENT);
         this.mqttClientType = connectionConfig.optInt("mqttClientType", Constants.MQTT_SYNC);
         this.isConnected = false;
+        logger.info(String.format("MQTT host:%s trustSerer:%d", mqttHost, trustServerCert));
     }
 
     public void connect(String type, String id) throws MqttException {
         try {
-            logger.fine("MQTT client host: " + mqttHost);
             isConnected = false;
             MqttSubscription [] subs = new MqttSubscription[1];
             subs[0] = new MqttSubscription("iot-2/type/+/id/+/err/data", 2);
@@ -101,7 +101,6 @@ public class Client implements MqttCallback {
                 sc.init(null, trustAllCerts, new java.security.SecureRandom()); 
                 SSLSocketFactory socketFactory = sc.getSocketFactory ();
                 opt.setSocketFactory(socketFactory);
-                logger.fine("MQTT Trust server cert");
             } else if (trustStore != null && !trustStore.equals("")) {
                 Properties sslClientProps = new Properties();
                 sslClientProps.setProperty("com.ibm.ssl.trustStore", trustStore);
