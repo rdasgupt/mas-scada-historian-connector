@@ -319,21 +319,24 @@ public class TagBuilder {
 
                             /* add dimensions */
                             JSONObject dimensionData = new JSONObject();
-                            dimensionData.put("tagpath", tagpath);
-                            dimensionData.put("tagid", tagid);
-                            for (i = 2; i < dimensionNames.length; i++) {
+                            for (i = 0; i < dimensionNames.length; i++) {
                                 String csvColName = dimensionCSVColNames[i];
-                                if (csvColName == null) {
-                                    dimensionData.put(dimensionNames[i], dimensions.getString(dimensionNames[i]));
+                                if (dimensionNames[i].equals("tagpath")) {
+                                    dimensionData.put("tagpath", tagpath);
+                                } else if (dimensionNames[i].equals("tagid")) {
+                                    dimensionData.put("tagid", tagid);
                                 } else {
-                                    dimensionData.put(dimensionNames[i], csvRecord.get(csvColName));
-                                } 
+                                    if (csvColName == null) {
+                                        dimensionData.put(dimensionNames[i], dimensions.getString(dimensionNames[i]));
+                                    } else {
+                                        dimensionData.put(dimensionNames[i], csvRecord.get(csvColName));
+                                    } 
+                                }
                             }
                             String dimensionDataString = dimensionData.toString();
                             tagData.setDimensions(dimensionDataString);
 
                             /* add Tag data in TagData cache */
-                            // System.out.println(String.format("TID: %s %d %s", tagid, tagpath.length(), tagpath));
                             tc.put(idString, tagData);
 
                             processed += 1;

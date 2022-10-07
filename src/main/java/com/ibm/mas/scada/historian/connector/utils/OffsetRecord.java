@@ -268,6 +268,13 @@ public class OffsetRecord {
             retval = 0;
         }
 
+        if (startTimeSecs == endTimeSecs) {
+            endTimeSecs = startTimeSecs + 1;
+            try {
+                Thread.sleep(1000);
+            } catch(Exception e) {}
+        }
+
         updateOffsetCache();
         return retval;
     }

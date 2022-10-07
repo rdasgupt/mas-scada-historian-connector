@@ -316,7 +316,7 @@ public class TagDimension {
  
         entityTypeObj.put("name", entityTypeName);
         entityTypeObj.put("description", entityTypeName);
-        dataItemDtoArray.put(createDataDtoObjectV2("evt_timestamp", "EventA", "TIMESTAMP", "METRIC"));
+        dataItemDtoArray.put(createDataDtoObjectV2("evt_timestamp", "EventA", "LITERAL", "METRIC"));
         dataItemDtoArray.put(createDataDtoObjectV2("intvalue", "EventA", "LITERAL", "METRIC"));
         dataItemDtoArray.put(createDataDtoObjectV2("floatvalue", "EventA", "LITERAL", "METRIC"));
         dataItemDtoArray.put(createDataDtoObjectV2("stringvalue", "EventA", "LITERAL", "METRIC"));
@@ -325,7 +325,7 @@ public class TagDimension {
         dataItemDtoArray.put(createDataDtoObjectV2("unit", "EventA", "LITERAL", "METRIC"));
         dataItemDtoArray.put(createDataDtoObjectV2("decimalAccuracy", "EventA", "LITERAL", "METRIC"));
         dataItemDtoArray.put(createDataDtoObjectV2("tag", "EventA", "LITERAL", "METRIC"));
-        dataItemDtoArray.put(createDataDtoObjectV2("evt_name", "EventA", "LITERAL", "METRIC"));
+        // dataItemDtoArray.put(createDataDtoObjectV2("evt_name", "EventA", "LITERAL", "METRIC"));
 
         dataItemDtoArray.put(createDataDtoObjectV2("TAGID", "EventA", "LITERAL", "DIMENSION"));
         dataItemDtoArray.put(createDataDtoObjectV2("TAGPATH", "EventA", "LITERAL", "DIMENSION"));
