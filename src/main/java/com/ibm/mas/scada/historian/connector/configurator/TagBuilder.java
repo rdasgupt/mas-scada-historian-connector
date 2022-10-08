@@ -319,13 +319,18 @@ public class TagBuilder {
 
                             /* add dimensions */
                             JSONObject dimensionData = new JSONObject();
-                            for (i = 0; i < dimensionNames.length; i++) {
-                                String csvColName = dimensionCSVColNames[i];
-                                if (dimensionNames[i].equals("tagpath")) {
-                                    dimensionData.put("tagpath", tagpath);
-                                } else if (dimensionNames[i].equals("tagid")) {
-                                    dimensionData.put("tagid", tagid);
-                                } else {
+                            dimensionData.put("tagid", tagid);
+                            dimensionData.put("tagpath", tagpath);
+                            if (scadaType == Constants.SCADA_IGNITION) {
+                                dimensionData.put("datatype", csvRecord.get("datatype"));
+                                for (i = 0; i < dimensionNames.length; i++) {
+                                    if (dimensionNames[i].equals("site")) {
+                                        dimensionData.put("site", dimensions.getString(dimensionNames[i]));
+                                    } 
+                                }
+                            } else {
+                                for (i = 2; i < dimensionNames.length; i++) {
+                                    String csvColName = dimensionCSVColNames[i];
                                     if (csvColName == null) {
                                         dimensionData.put(dimensionNames[i], dimensions.getString(dimensionNames[i]));
                                     } else {
