@@ -329,7 +329,7 @@ public class TagDimension {
 
         dataItemDtoArray.put(createDataDtoObjectV2("TAGID", "EventA", "LITERAL", "DIMENSION"));
         dataItemDtoArray.put(createDataDtoObjectV2("TAGPATH", "EventA", "LITERAL", "DIMENSION"));
-        dataItemDtoArray.put(createDataDtoObjectV2("DATATYPE", "EventA", "NUMBER", "DIMENSION"));
+        dataItemDtoArray.put(createDataDtoObjectV2("DATATYPE", "EventA", "LITERAL", "DIMENSION"));
         dataItemDtoArray.put(createDataDtoObjectV2("SITE", "EventA", "LITERAL", "DIMENSION"));
         entityTypeObj.put("dataItemDto", dataItemDtoArray);
 
@@ -440,7 +440,7 @@ public class TagDimension {
             }
  
             if (dimensionStatus == 0) {
-                logger.info(String.format("Add dimension: tagpath:%s Type:%s TypeUUID:%s Id:%s", tagpath, deviceType, uuid, deviceId));
+                logger.info(String.format("Add dimension: Type:%s TypeUUID:%s DIM:%s", deviceType, uuid, dimensionsString));
 
                 Iterator<String> keys = dimensionsJson.keys();
                 while(keys.hasNext()) {
