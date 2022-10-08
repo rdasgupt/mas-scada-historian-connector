@@ -316,20 +316,20 @@ public class TagDimension {
  
         entityTypeObj.put("name", entityTypeName);
         entityTypeObj.put("description", entityTypeName);
-        dataItemDtoArray.put(createDataDtoObjectV2("evt_timestamp", "EventA", "LITERAL", "METRIC"));
-        dataItemDtoArray.put(createDataDtoObjectV2("intvalue", "EventA", "LITERAL", "METRIC"));
-        dataItemDtoArray.put(createDataDtoObjectV2("floatvalue", "EventA", "LITERAL", "METRIC"));
+        dataItemDtoArray.put(createDataDtoObjectV2("evt_timestamp", "EventA", "NUMBER", "METRIC"));
+        dataItemDtoArray.put(createDataDtoObjectV2("intvalue", "EventA", "NUMBER", "METRIC"));
+        dataItemDtoArray.put(createDataDtoObjectV2("floatvalue", "EventA", "NUMBER", "METRIC"));
         dataItemDtoArray.put(createDataDtoObjectV2("stringvalue", "EventA", "LITERAL", "METRIC"));
         dataItemDtoArray.put(createDataDtoObjectV2("datevalue", "EventA", "LITERAL", "METRIC"));
-        dataItemDtoArray.put(createDataDtoObjectV2("type", "EventA", "LITERAL", "METRIC"));
+        dataItemDtoArray.put(createDataDtoObjectV2("type", "EventA", "NUMBER", "METRIC"));
         dataItemDtoArray.put(createDataDtoObjectV2("unit", "EventA", "LITERAL", "METRIC"));
-        dataItemDtoArray.put(createDataDtoObjectV2("decimalAccuracy", "EventA", "LITERAL", "METRIC"));
+        dataItemDtoArray.put(createDataDtoObjectV2("decimalAccuracy", "EventA", "NUMBER", "METRIC"));
         dataItemDtoArray.put(createDataDtoObjectV2("tag", "EventA", "LITERAL", "METRIC"));
         // dataItemDtoArray.put(createDataDtoObjectV2("evt_name", "EventA", "LITERAL", "METRIC"));
 
         dataItemDtoArray.put(createDataDtoObjectV2("TAGID", "EventA", "LITERAL", "DIMENSION"));
         dataItemDtoArray.put(createDataDtoObjectV2("TAGPATH", "EventA", "LITERAL", "DIMENSION"));
-        dataItemDtoArray.put(createDataDtoObjectV2("DATATYPE", "EventA", "LITERAL", "DIMENSION"));
+        dataItemDtoArray.put(createDataDtoObjectV2("DATATYPE", "EventA", "NUMBER", "DIMENSION"));
         dataItemDtoArray.put(createDataDtoObjectV2("SITE", "EventA", "LITERAL", "DIMENSION"));
         entityTypeObj.put("dataItemDto", dataItemDtoArray);
 
