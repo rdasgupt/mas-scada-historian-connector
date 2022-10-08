@@ -103,7 +103,7 @@ public class DataProvider {
         Connection conn = null;
         Statement stmt = null;
 
-        logger.info("Connecting to source to extract data");
+        // logger.info("Connecting to source to extract data");
 
         long waitTime = 0;
         long cycleStartTimeMillis = System.currentTimeMillis();

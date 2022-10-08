@@ -269,9 +269,9 @@ public class OffsetRecord {
         }
 
         if (startTimeSecs == endTimeSecs) {
-            endTimeSecs = startTimeSecs + 1;
+            endTimeSecs = startTimeSecs + 10;
             try {
-                Thread.sleep(1000);
+                Thread.sleep(10000);
             } catch(Exception e) {}
         }
 
