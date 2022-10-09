@@ -268,7 +268,7 @@ public class OffsetRecord {
             retval = 0;
         }
 
-        if (startTimeSecs == endTimeSecs) {
+        if (startTimeSecs == endTimeSecs || (endTimeSecs - 1) == startTimeSecs) {
             endTimeSecs = startTimeSecs + 10;
             try {
                 Thread.sleep(10000);
